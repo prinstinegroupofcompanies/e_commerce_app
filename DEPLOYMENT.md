@@ -45,7 +45,15 @@ Vercel proxies `/api/*` and `/uploads/*` to Render so the browser stays on one o
    npm run users:production
    ```
 
-6. Ensure **NEXTAUTH_SECRET** is identical on Vercel and Render, and **NEXTAUTH_URL** matches your Vercel domain exactly.
+6. Ensure **NEXTAUTH_SECRET** / **AUTH_SECRET** are identical on Vercel and Render, and **NEXTAUTH_URL** matches your Vercel domain exactly.
+
+7. **Bootstrap production logins** (once after deploy):
+
+   ```bash
+   curl "https://YOUR-VERCEL-URL/api/system/bootstrap-users?secret=YOUR_CRON_SECRET"
+   ```
+
+   Or on Render shell: `npm run users:production`
 
 ### Option B: Manual web service
 
@@ -120,7 +128,7 @@ npm run dev
 | Issue | Fix |
 |-------|-----|
 | Auth cookies not sticking | `NEXTAUTH_URL` must exactly match the browser URL (scheme + host, no trailing slash). |
-| Auth login fails on Vercel | Do not proxy `/api/auth` to Render. Auth runs on Vercel; run `npm run users:production` on Render DB. |
+| Auth login fails on Vercel | Set `AUTH_SECRET` and `NEXTAUTH_SECRET` to the same value. Run bootstrap-users endpoint. Auth runs on Vercel, not Render. |
 | API 502 from Vercel | Render service may be restarting after deploy; check Render logs. |
 | Uploads 404 on Vercel | Ensure `RENDER_BACKEND_URL` is set and Render disk is mounted at `public/uploads`. |
 | Prisma errors on Vercel build | `DATABASE_URL` must be Postgres **external** URL. |

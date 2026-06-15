@@ -3,10 +3,11 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { PasswordInput } from "@/components/auth/password-input";
 
 function ResetInner() {
   const router = useRouter();
@@ -50,61 +51,64 @@ function ResetInner() {
   }
 
   return (
-    <Card className="w-full max-w-md border-primary/10 shadow-lg">
-      <CardHeader>
-        <CardTitle>Choose a new password</CardTitle>
-        <CardDescription>Pick a strong password you don&apos;t use anywhere else.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {done ? (
-          <div className="space-y-3 text-sm">
-            <p className="text-emerald-600">Password updated. Redirecting to sign in…</p>
-          </div>
-        ) : (
-          <form className="space-y-4" onSubmit={submit}>
-            <div className="space-y-2">
-              <Label htmlFor="password">New password</Label>
-              <Input
+    <AuthShell portal="customer" showPortalLinks={false}>
+      <Card className="border-0 bg-white/95 shadow-2xl shadow-primary/10 ring-1 ring-black/5 backdrop-blur-sm">
+        <CardContent className="pt-6">
+          {done ? (
+            <p className="text-center text-sm text-emerald-600">Password updated. Redirecting to sign in…</p>
+          ) : (
+            <form className="space-y-4" onSubmit={submit}>
+              <PasswordInput
                 id="password"
-                type="password"
+                label="New password"
                 autoComplete="new-password"
                 required
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirm">Confirm password</Label>
-              <Input
+              <PasswordInput
                 id="confirm"
-                type="password"
+                label="Confirm password"
                 autoComplete="new-password"
                 required
                 minLength={6}
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
               />
-            </div>
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
-            <Button type="submit" className="w-full" disabled={loading || !token}>
-              {loading ? "Saving…" : "Set new password"}
-            </Button>
-            <p className="text-center text-xs text-muted-foreground">
-              <Link href="/forgot-password" className="underline">
-                Need a new link?
-              </Link>
-            </p>
-          </form>
-        )}
-      </CardContent>
-    </Card>
+              {error ? <p className="text-sm text-destructive">{error}</p> : null}
+              <Button type="submit" className="h-11 w-full" disabled={loading || !token}>
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving…
+                  </>
+                ) : (
+                  "Set new password"
+                )}
+              </Button>
+              <p className="text-center text-xs text-muted-foreground">
+                <Link href="/forgot-password" className="underline">
+                  Need a new link?
+                </Link>
+              </p>
+            </form>
+          )}
+        </CardContent>
+      </Card>
+    </AuthShell>
   );
 }
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-muted-foreground">Loading…</p>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
+          Loading…
+        </div>
+      }
+    >
       <ResetInner />
     </Suspense>
   );

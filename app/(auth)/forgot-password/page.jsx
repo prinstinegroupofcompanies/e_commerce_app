@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Loader2, KeyRound } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { AuthShell } from "@/components/auth/auth-shell";
 
 export default function ForgotPasswordPage() {
@@ -32,20 +32,13 @@ export default function ForgotPasswordPage() {
 
   return (
     <AuthShell portal="customer">
-      <Card className="border-border/80 shadow-xl shadow-primary/5">
-        <CardHeader className="space-y-1 pb-4">
-          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <KeyRound className="h-5 w-5" />
-          </div>
-          <CardTitle className="text-2xl font-bold tracking-tight">Reset your password</CardTitle>
-          <CardDescription>We&apos;ll email you a secure link to choose a new password</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Card className="border-0 bg-white/95 shadow-2xl shadow-primary/10 ring-1 ring-black/5 backdrop-blur-sm">
+        <CardContent className="pt-6">
           {done ? (
             <div className="space-y-3 text-sm">
               <p>
-                If an account exists for <span className="font-medium">{email}</span>, a reset link is
-                on the way. Check your inbox (and spam folder).
+                If an account exists for <span className="font-medium">{email}</span>, a reset link is on the way.
+                Check your inbox and spam folder.
               </p>
               <p className="text-muted-foreground">Reset links expire in 1 hour.</p>
               <Button asChild variant="outline" size="sm" className="mt-2">
@@ -66,7 +59,7 @@ export default function ForgotPasswordPage() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="h-11 w-full" disabled={loading}>
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

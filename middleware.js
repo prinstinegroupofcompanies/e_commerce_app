@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { getAuthSecret, isProductionEnv } from "@/lib/auth-secret";
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
   const token = await getToken({
     req,
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: getAuthSecret(),
+    secureCookie: isProductionEnv(),
   });
   const role = token?.role;
 

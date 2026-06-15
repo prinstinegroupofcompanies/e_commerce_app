@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, UserPlus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { PasswordInput } from "@/components/auth/password-input";
 
@@ -43,16 +43,9 @@ export default function RegisterPage() {
   }
 
   return (
-    <AuthShell portal="customer">
-      <Card className="border-border/80 shadow-xl shadow-primary/5">
-        <CardHeader className="space-y-1 pb-4">
-          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <UserPlus className="h-5 w-5" />
-          </div>
-          <CardTitle className="text-2xl font-bold tracking-tight">Create your account</CardTitle>
-          <CardDescription>Join Markay Hall to shop, track orders, and save favorites</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <AuthShell portal="register">
+      <Card className="border-0 bg-white/95 shadow-2xl shadow-primary/10 ring-1 ring-black/5 backdrop-blur-sm">
+        <CardContent className="pt-6">
           <form className="space-y-4" onSubmit={onSubmit}>
             <div className="space-y-2">
               <Label htmlFor="name">Full name</Label>
@@ -89,11 +82,11 @@ export default function RegisterPage() {
               minLength={6}
             />
             {error ? (
-              <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+              <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
                 {error}
               </p>
             ) : null}
-            <Button className="w-full" type="submit" disabled={loading}>
+            <Button className="h-11 w-full text-base" type="submit" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -104,9 +97,9 @@ export default function RegisterPage() {
               )}
             </Button>
           </form>
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <p className="mt-6 border-t pt-4 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="font-medium text-primary hover:underline">
+            <Link href="/login" className="font-semibold text-primary hover:underline">
               Sign in
             </Link>
           </p>

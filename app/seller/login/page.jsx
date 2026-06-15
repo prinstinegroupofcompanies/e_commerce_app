@@ -1,20 +1,18 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Loader2, Store } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { PasswordInput } from "@/components/auth/password-input";
-import { SITE_NAME } from "@/lib/brand";
+import { credentialSignIn } from "@/hooks/use-credential-sign-in";
 
 function SellerLoginFormInner() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/seller/dashboard";
   const pending = searchParams.get("pending");
@@ -27,35 +25,20 @@ function SellerLoginFormInner() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const res = await signIn("seller-login", {
-      email,
-      password,
-      redirect: false,
-      callbackUrl,
-    });
-    setLoading(false);
-    if (res?.error) {
+    const res = await credentialSignIn("seller-login", { email, password, callbackUrl });
+    if (!res.ok) {
+      setLoading(false);
       setError("Invalid credentials or your store is still pending approval.");
-      return;
     }
-    router.push(callbackUrl);
-    router.refresh();
   }
 
   return (
     <AuthShell portal="seller">
-      <Card className="border-border/80 shadow-xl shadow-primary/5">
-        <CardHeader className="space-y-1 pb-4">
-          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <Store className="h-5 w-5" />
-          </div>
-          <CardTitle className="text-2xl font-bold tracking-tight">Seller sign in</CardTitle>
-          <CardDescription>Manage your {SITE_NAME} shop and orders</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Card className="border-0 bg-white/95 shadow-2xl shadow-primary/10 ring-1 ring-black/5 backdrop-blur-sm">
+        <CardContent className="pt-6">
           {pending === "1" ? (
-            <p className="mb-4 rounded-md bg-accent/20 px-3 py-2 text-sm text-foreground">
-              Registration received. You can sign in once Markay Hall approves your store.
+            <p className="mb-4 rounded-lg bg-accent/25 px-3 py-2 text-sm">
+              Registration received. Sign in once Markay Hall approves your store.
             </p>
           ) : null}
           <form className="space-y-4" onSubmit={onSubmit}>
@@ -80,11 +63,11 @@ function SellerLoginFormInner() {
               required
             />
             {error ? (
-              <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+              <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
                 {error}
               </p>
             ) : null}
-            <Button className="w-full" type="submit" disabled={loading}>
+            <Button className="h-11 w-full text-base" type="submit" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -100,9 +83,9 @@ function SellerLoginFormInner() {
               </Link>
             </p>
           </form>
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <p className="mt-6 border-t pt-4 text-center text-sm text-muted-foreground">
             New seller?{" "}
-            <Link href="/seller/register" className="font-medium text-primary hover:underline">
+            <Link href="/seller/register" className="font-semibold text-primary hover:underline">
               Register your store
             </Link>
           </p>

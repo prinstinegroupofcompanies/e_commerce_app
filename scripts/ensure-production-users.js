@@ -49,6 +49,7 @@ async function main() {
       isShopActive: true,
       verificationStatus: "approved",
       verifiedAt: new Date(),
+      rejectionReason: null,
       name: ACCOUNTS.seller.name,
       shopName: ACCOUNTS.seller.shopName,
       shopSlug: ACCOUNTS.seller.shopSlug,

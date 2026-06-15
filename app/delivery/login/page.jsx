@@ -2,19 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Loader2, Truck } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { PasswordInput } from "@/components/auth/password-input";
+import { credentialSignIn } from "@/hooks/use-credential-sign-in";
 
 export default function DeliveryLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -22,27 +20,21 @@ export default function DeliveryLoginPage() {
   async function submit(e) {
     e.preventDefault();
     setBusy(true);
-    const res = await signIn("delivery-login", { email, password, redirect: false });
-    setBusy(false);
-    if (res?.error) {
+    const res = await credentialSignIn("delivery-login", {
+      email,
+      password,
+      callbackUrl: "/delivery/dashboard",
+    });
+    if (!res.ok) {
+      setBusy(false);
       toast.error("Invalid credentials or account not yet approved");
-      return;
     }
-    router.push("/delivery/dashboard");
-    router.refresh();
   }
 
   return (
     <AuthShell portal="delivery">
-      <Card className="border-border/80 shadow-xl shadow-primary/5">
-        <CardHeader className="space-y-1 pb-4">
-          <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <Truck className="h-5 w-5" />
-          </div>
-          <CardTitle className="text-2xl font-bold tracking-tight">Delivery partner login</CardTitle>
-          <CardDescription>Markay Hall logistics and rider management</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Card className="border-0 bg-white/95 shadow-2xl shadow-primary/10 ring-1 ring-black/5 backdrop-blur-sm">
+        <CardContent className="pt-6">
           <form onSubmit={submit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Company email</Label>
@@ -63,7 +55,7 @@ export default function DeliveryLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <Button type="submit" className="w-full" disabled={busy}>
+            <Button type="submit" className="h-11 w-full text-base" disabled={busy}>
               {busy ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -74,8 +66,8 @@ export default function DeliveryLoginPage() {
               )}
             </Button>
           </form>
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            <Link href="/delivery/register" className="font-medium text-primary hover:underline">
+          <p className="mt-6 border-t pt-4 text-center text-sm text-muted-foreground">
+            <Link href="/delivery/register" className="font-semibold text-primary hover:underline">
               Register your delivery company
             </Link>
           </p>
