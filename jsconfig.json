@@ -2,6 +2,13 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./*"]
-    }
-  }
+    },
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "preserve",
+    "plugins": [{ "name": "next" }],
+    "strict": false,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["next-env.d.ts", "**/*.js", "**/*.jsx", "types/**/*.d.ts", ".next/types/**/*.ts"]
 }

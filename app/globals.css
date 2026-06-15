@@ -2,26 +2,95 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 0 0% 100%;
+    --foreground: 221 45% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 221 45% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 221 45% 12%;
+    /* Markay Hall royal blue */
+    --primary: 221 100% 29%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 221 25% 96%;
+    --secondary-foreground: 221 45% 12%;
+    --muted: 221 18% 96%;
+    --muted-foreground: 221 12% 42%;
+    /* Markay Hall gold accent */
+    --accent: 45 100% 50%;
+    --accent-foreground: 221 45% 12%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 221 18% 90%;
+    --input: 221 18% 90%;
+    --ring: 221 100% 29%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 221 35% 7%;
+    --foreground: 0 0% 98%;
+    --card: 221 30% 9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 221 30% 9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 221 85% 55%;
+    --primary-foreground: 221 45% 8%;
+    --secondary: 221 25% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 221 20% 16%;
+    --muted-foreground: 221 12% 65%;
+    --accent: 45 95% 52%;
+    --accent-foreground: 221 45% 8%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 221 20% 18%;
+    --input: 221 20% 18%;
+    --ring: 45 95% 52%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .invoice {
+    box-shadow: none !important;
   }
 }

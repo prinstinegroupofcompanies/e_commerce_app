@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <body style="font-family: system-ui">
+    <p>Order <strong>{{orderCode}}</strong> at {{siteName}}</p>
+    <p>Total: {{total}}</p>
+    {{#if deliveryPin}}
+    <p>Your delivery PIN: <strong>{{deliveryPin}}</strong> — give this to the rider when your order arrives.</p>
+    {{/if}}
+    <p>Thank you for your purchase.</p>
+  </body>
+</html>

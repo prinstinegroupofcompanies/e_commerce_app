@@ -1,4 +1,46 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
+import withPWA from "next-pwa";
 
-export default nextConfig;
+const withPWAConfigured = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+});
+
+function hostnameFromEnv(name) {
+  try {
+    const raw = process.env[name];
+    if (!raw) return null;
+    return new URL(raw).hostname;
+  } catch {
+    return null;
+  }
+}
+
+const imageHosts = new Set(["images.unsplash.com"]);
+for (const key of ["NEXT_PUBLIC_APP_URL", "RENDER_BACKEND_URL"]) {
+  const host = hostnameFromEnv(key);
+  if (host) imageHosts.add(host);
+}
+
+const backend = process.env.RENDER_BACKEND_URL?.replace(/\/$/, "");
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [...imageHosts].flatMap((hostname) => [
+      { protocol: "https", hostname },
+      { protocol: "http", hostname },
+    ]),
+  },
+  async rewrites() {
+    if (!backend) return [];
+    return [
+      { source: "/api/:path*", destination: `${backend}/api/:path*` },
+      { source: "/uploads/:path*", destination: `${backend}/uploads/:path*` },
+    ];
+  },
+};
+
+export default withPWAConfigured(nextConfig);

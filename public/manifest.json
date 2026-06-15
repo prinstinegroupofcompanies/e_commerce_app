@@ -1,0 +1,17 @@
+{
+  "name": "Markay Hall",
+  "short_name": "Markay Hall",
+  "description": "Multivendor marketplace — shop from trusted sellers in one place.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#002395",
+  "icons": [
+    {
+      "src": "/markay_hall.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

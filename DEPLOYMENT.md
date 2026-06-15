@@ -1,0 +1,133 @@
+# Deployment: Render (backend) + Vercel (frontend)
+
+Markay Hall is a **monolithic Next.js 14** app. Production is split as follows:
+
+| Layer | Platform | Role |
+|-------|----------|------|
+| **Frontend** | [Vercel](https://vercel.com) | Public URL, SSR pages, middleware, NextAuth UI |
+| **Backend API + DB** | [Render](https://render.com) | PostgreSQL, API routes, file uploads, webhooks, cron targets |
+
+Vercel proxies `/api/*` and `/uploads/*` to Render so the browser stays on one origin (cookies and auth work).
+
+---
+
+## Prerequisites
+
+- GitHub repo connected to both Render and Vercel
+- Node.js 20 locally for one-time seed (optional)
+
+---
+
+## Step 1 — Deploy backend on Render
+
+### Option A: Blueprint (recommended)
+
+1. In Render: **New → Blueprint** → connect this repo.
+2. Render reads [`render.yaml`](./render.yaml) and creates:
+   - `markay-hall-db` — PostgreSQL
+   - `markay-hall-api` — Next.js web service
+   - Two cron jobs (cart abandonment, analytics email)
+3. After the first deploy, open **markay-hall-api → Environment** and set:
+
+   | Variable | Value |
+   |----------|--------|
+   | `NEXTAUTH_URL` | `https://YOUR-VERCEL-URL.vercel.app` (update after Step 2) |
+   | `NEXT_PUBLIC_APP_URL` | Same as `NEXTAUTH_URL` |
+   | SMTP, Stripe, Twilio, Flutterwave, VAPID keys | As needed |
+
+4. On **each cron service**, set `MARKAY_API_URL` to your Render API URL, e.g. `https://markay-hall-api.onrender.com` (no trailing slash).
+
+5. **Seed the database** (once): Render shell on `markay-hall-api`:
+
+   ```bash
+   npm run db:seed
+   ```
+
+### Option B: Manual web service
+
+1. **New → PostgreSQL** → note the **Internal** and **External** connection strings.
+2. **New → Web Service** → connect repo:
+   - **Build:** `npm run build:render`
+   - **Start:** `npm run start`
+   - **Health check:** `/api/config/public`
+3. Add env var `DATABASE_URL` from the Postgres instance.
+4. Add a **persistent disk** mounted at `/opt/render/project/src/public/uploads` (1 GB) for image uploads.
+
+---
+
+## Step 2 — Deploy frontend on Vercel
+
+1. [vercel.com/new](https://vercel.com/new) → import the same repo.
+2. Framework preset: **Next.js** (uses [`vercel.json`](./vercel.json)).
+3. Set **Environment variables** (Production):
+
+   | Variable | Value |
+   |----------|--------|
+   | `DATABASE_URL` | Render Postgres **External** URL (Vercel needs external, not internal) |
+   | `NEXTAUTH_SECRET` | Same value as on Render |
+   | `NEXTAUTH_URL` | `https://your-app.vercel.app` |
+   | `NEXT_PUBLIC_APP_URL` | Same as `NEXTAUTH_URL` |
+   | `RENDER_BACKEND_URL` | `https://markay-hall-api.onrender.com` |
+   | `CRON_SECRET` | Same as on Render |
+   | Payment / SMS / SMTP / VAPID vars | Mirror Render |
+
+4. Deploy.
+
+5. Go back to Render **markay-hall-api** and update `NEXTAUTH_URL` + `NEXT_PUBLIC_APP_URL` to your final Vercel URL (or custom domain).
+
+---
+
+## Step 3 — Custom domain (optional)
+
+1. **Vercel:** add your domain → set `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` to that URL.
+2. **Render:** update the same two vars on `markay-hall-api`.
+
+---
+
+## Step 4 — Webhooks and third-party callbacks
+
+Point external services at the **Render API** URL:
+
+| Service | Endpoint |
+|---------|----------|
+| Stripe | `https://markay-hall-api.onrender.com/api/payments/webhook` |
+| Flutterwave | `https://markay-hall-api.onrender.com/api/payments/flutterwave/webhook` |
+
+Payment return pages load on Vercel; verification API calls are proxied to Render.
+
+---
+
+## Local development
+
+Unchanged — SQLite via `DATABASE_URL="file:./dev.db"`. Do **not** set `RENDER_BACKEND_URL` locally.
+
+```bash
+cp .env.example .env
+npm install
+npm run db:push
+npm run db:seed
+npm run dev
+```
+
+---
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| Auth cookies not sticking | `NEXTAUTH_URL` must exactly match the browser URL (scheme + host, no trailing slash). |
+| API 502 from Vercel | Render free tier sleeps; first request wakes it (~30s). |
+| Uploads 404 on Vercel | Ensure `RENDER_BACKEND_URL` is set and Render disk is mounted at `public/uploads`. |
+| Prisma errors on Vercel build | `DATABASE_URL` must be Postgres **external** URL. |
+| Cron unauthorized | `CRON_SECRET` must match on Render API and cron services. |
+
+---
+
+## Demo logins (after seed)
+
+Password for all seed users: `111111`
+
+- Admin: `admin@example.com`
+- Customer: `customer@example.com`
+- Seller: `seller@example.com`
+- Delivery: `delivery@example.com`
