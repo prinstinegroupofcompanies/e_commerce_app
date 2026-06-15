@@ -4,7 +4,7 @@
 
 databases:
   - name: markay-hall-db
-    plan: free
+    plan: basic-256mb # Starter-tier Postgres (legacy "starter" not available for new DBs)
     databaseName: markayhall
     user: markayhall
 
@@ -13,7 +13,7 @@ services:
   - type: web
     name: markay-hall-api
     runtime: node
-    plan: free
+    plan: starter
     region: oregon
     buildCommand: >-
       npm ci &&
@@ -52,6 +52,7 @@ services:
   # Hourly cart-abandonment reminders
   - type: cron
     name: markay-hall-cron-cart
+    plan: starter
     schedule: "0 * * * *"
     runtime: node
     buildCommand: "exit 0"
@@ -69,6 +70,7 @@ services:
   # Weekly analytics email (Mondays 08:00 UTC)
   - type: cron
     name: markay-hall-cron-analytics
+    plan: starter
     schedule: "0 8 * * 1"
     runtime: node
     buildCommand: "exit 0"

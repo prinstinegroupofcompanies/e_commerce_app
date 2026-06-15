@@ -116,7 +116,7 @@ npm run dev
 | Issue | Fix |
 |-------|-----|
 | Auth cookies not sticking | `NEXTAUTH_URL` must exactly match the browser URL (scheme + host, no trailing slash). |
-| API 502 from Vercel | Render free tier sleeps; first request wakes it (~30s). |
+| API 502 from Vercel | Render service may be restarting after deploy; check Render logs. |
 | Uploads 404 on Vercel | Ensure `RENDER_BACKEND_URL` is set and Render disk is mounted at `public/uploads`. |
 | Prisma errors on Vercel build | `DATABASE_URL` must be Postgres **external** URL. |
 | Cron unauthorized | `CRON_SECRET` must match on Render API and cron services. |
