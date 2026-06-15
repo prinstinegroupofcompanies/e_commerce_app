@@ -36,10 +36,16 @@ const nextConfig = {
   },
   async rewrites() {
     if (!backend) return [];
-    return [
-      { source: "/api/:path*", destination: `${backend}/api/:path*` },
-      { source: "/uploads/:path*", destination: `${backend}/uploads/:path*` },
-    ];
+    // Keep /api/auth and other local API routes on Vercel (filesystem wins over fallback).
+    // Proxy uploads API + static files to Render for persistent disk storage.
+    return {
+      beforeFiles: [
+        { source: "/api/upload", destination: `${backend}/api/upload` },
+      ],
+      fallback: [
+        { source: "/uploads/:path*", destination: `${backend}/uploads/:path*` },
+      ],
+    };
   },
 };
 

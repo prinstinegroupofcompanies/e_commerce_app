@@ -41,7 +41,11 @@ Vercel proxies `/api/*` and `/uploads/*` to Render so the browser stays on one o
 
    ```bash
    npm run db:seed
+   # Or update only production login accounts:
+   npm run users:production
    ```
+
+6. Ensure **NEXTAUTH_SECRET** is identical on Vercel and Render, and **NEXTAUTH_URL** matches your Vercel domain exactly.
 
 ### Option B: Manual web service
 
@@ -116,6 +120,7 @@ npm run dev
 | Issue | Fix |
 |-------|-----|
 | Auth cookies not sticking | `NEXTAUTH_URL` must exactly match the browser URL (scheme + host, no trailing slash). |
+| Auth login fails on Vercel | Do not proxy `/api/auth` to Render. Auth runs on Vercel; run `npm run users:production` on Render DB. |
 | API 502 from Vercel | Render service may be restarting after deploy; check Render logs. |
 | Uploads 404 on Vercel | Ensure `RENDER_BACKEND_URL` is set and Render disk is mounted at `public/uploads`. |
 | Prisma errors on Vercel build | `DATABASE_URL` must be Postgres **external** URL. |
@@ -123,11 +128,10 @@ npm run dev
 
 ---
 
-## Demo logins (after seed)
+## Demo logins (after seed or `npm run users:production`)
 
-Password for all seed users: `111111`
-
-- Admin: `admin@example.com`
-- Customer: `customer@example.com`
-- Seller: `seller@example.com`
-- Delivery: `delivery@example.com`
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | `admin@markayhall.com` | `Admin@MarkayHall` |
+| Seller | `seller@markayhall.com` | `Seller@2026` |
+| Customer | `customer@markayhall.com` | `Customer@2026` |

@@ -23,6 +23,7 @@ services:
       npm run build
     startCommand: npm run start
     healthCheckPath: /api/config/public
+    initialDeployHook: npm run users:production
     envVars:
       - key: NODE_VERSION
         value: "20"

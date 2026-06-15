@@ -3,7 +3,13 @@ const bcrypt = require("bcryptjs");
 
 const prisma = new PrismaClient();
 
-const PASSWORD_PLAIN = "111111";
+const PASSWORD_DEMO = "111111";
+
+const PRODUCTION_ACCOUNTS = {
+  admin: { email: "admin@markayhall.com", password: "Admin@MarkayHall", name: "Markay Hall Admin" },
+  seller: { email: "seller@markayhall.com", password: "Seller@2026", name: "Markay Hall Seller" },
+  customer: { email: "customer@markayhall.com", password: "Customer@2026", name: "Markay Hall Customer" },
+};
 
 // ─── Unsplash image URLs (royalty-free, direct hotlink) ──────
 const IMG = {
@@ -88,16 +94,19 @@ async function refreshProductReviewStats(productId) {
 }
 
 async function main() {
-  const password = await bcrypt.hash(PASSWORD_PLAIN, 12);
+  const passwordDemo = await bcrypt.hash(PASSWORD_DEMO, 12);
+  const adminPassword = await bcrypt.hash(PRODUCTION_ACCOUNTS.admin.password, 12);
+  const sellerPrimaryPassword = await bcrypt.hash(PRODUCTION_ACCOUNTS.seller.password, 12);
+  const customerPrimaryPassword = await bcrypt.hash(PRODUCTION_ACCOUNTS.customer.password, 12);
 
   // ─── Admin & settings ───────────────────────────────────────
   await prisma.admin.upsert({
-    where: { email: "admin@example.com" },
-    update: {},
+    where: { email: PRODUCTION_ACCOUNTS.admin.email },
+    update: { password: adminPassword, isActive: true, name: PRODUCTION_ACCOUNTS.admin.name },
     create: {
-      name: "Markay Hall Admin",
-      email: "admin@example.com",
-      password,
+      name: PRODUCTION_ACCOUNTS.admin.name,
+      email: PRODUCTION_ACCOUNTS.admin.email,
+      password: adminPassword,
     },
   });
 
@@ -224,11 +233,12 @@ async function main() {
   // ─── Sellers (stores) ─────────────────────────────────────────
   const sellersData = [
     {
-      email: "seller@example.com",
-      name: "Demo Seller",
+      email: PRODUCTION_ACCOUNTS.seller.email,
+      name: PRODUCTION_ACCOUNTS.seller.name,
+      password: sellerPrimaryPassword,
       phone: "+2317702000001",
-      shopName: "Acme Goods",
-      shopSlug: "acme-goods",
+      shopName: "Markay Hall Official Store",
+      shopSlug: "markay-hall-official",
       shopDescription: "Quality everyday goods from a trusted seller.",
       shopCity: "Monrovia",
       shopCountry: "Liberia",
@@ -279,10 +289,11 @@ async function main() {
   ];
   const sellerMap = {};
   for (const s of sellersData) {
+    const sellerPassword = s.password || passwordDemo;
     sellerMap[s.shopSlug] = await upsertByEmail("seller", s.email, {
       create: {
         name: s.name,
-        password,
+        password: sellerPassword,
         shopName: s.shopName,
         shopSlug: s.shopSlug,
         shopDescription: s.shopDescription,
@@ -302,6 +313,7 @@ async function main() {
         walletBalance: 1200,
       },
       update: {
+        password: sellerPassword,
         verificationStatus: "approved",
         isShopActive: true,
         verifiedAt: new Date(),
@@ -352,7 +364,7 @@ async function main() {
       },
       create: {
         ...d,
-        password,
+        password: passwordDemo,
         country: "Liberia",
         verificationStatus: "approved",
         verifiedAt: new Date(),
@@ -363,7 +375,13 @@ async function main() {
 
   // ─── Customers ────────────────────────────────────────────────
   const customersData = [
-    { email: "customer@example.com", name: "Demo Customer", walletBalance: 500, phone: "+2317701234567" },
+    {
+      email: PRODUCTION_ACCOUNTS.customer.email,
+      name: PRODUCTION_ACCOUNTS.customer.name,
+      password: customerPrimaryPassword,
+      walletBalance: 500,
+      phone: "+2317701234567",
+    },
     { email: "jane.doe@mock.example.com", name: "Jane Doe", walletBalance: 120, phone: "+2317701234568" },
     { email: "mike.wilson@mock.example.com", name: "Mike Wilson", walletBalance: 75, phone: "+2317701234569" },
     { email: "sarah.kim@mock.example.com", name: "Sarah Kim", walletBalance: 200, phone: "+2317701234570" },
@@ -371,10 +389,11 @@ async function main() {
   ];
   const customerMap = {};
   for (const c of customersData) {
+    const customerPassword = c.password || passwordDemo;
     customerMap[c.email] = await upsertByEmail("customer", c.email, {
       create: {
         name: c.name,
-        password,
+        password: customerPassword,
         emailVerifiedAt: new Date(),
         walletBalance: c.walletBalance,
         phone: c.phone,
@@ -382,6 +401,7 @@ async function main() {
       },
       update: {
         name: c.name,
+        password: customerPassword,
         phone: c.phone,
         emailVerifiedAt: new Date(),
         walletBalance: c.walletBalance,
@@ -402,7 +422,7 @@ async function main() {
       isFeatured: true,
       categorySlug: "electronics",
       brandSlug: "acme",
-      sellerSlug: "acme-goods",
+      sellerSlug: "markay-hall-official",
       thumbnail: IMG.headphones,
       images: [IMG.headphones, IMG.headphones2, IMG.headphones3],
     },
@@ -416,7 +436,7 @@ async function main() {
       isFeatured: true,
       categorySlug: "fashion",
       brandSlug: "urban-style",
-      sellerSlug: "acme-goods",
+      sellerSlug: "markay-hall-official",
       thumbnail: IMG.backpack,
       images: [IMG.backpack, IMG.backpack2, IMG.backpack3],
     },
@@ -529,7 +549,7 @@ async function main() {
       stockQuantity: 55,
       categorySlug: "sports",
       brandSlug: "acme",
-      sellerSlug: "acme-goods",
+      sellerSlug: "markay-hall-official",
       thumbnail: IMG.yogaMat,
       images: [IMG.yogaMat, IMG.yogaMat2, IMG.yogaMat3],
     },
@@ -681,7 +701,7 @@ async function main() {
   // ─── Notifications ──────────────────────────────────────────────
   const notifications = [
     {
-      customerEmail: "customer@example.com",
+      customerEmail: PRODUCTION_ACCOUNTS.customer.email,
       title: "Welcome to Markay Hall",
       message: "Your account is ready. Start shopping from trusted sellers.",
       type: "info",
@@ -702,7 +722,7 @@ async function main() {
       link: "/products",
     },
     {
-      sellerEmail: "seller@example.com",
+      sellerEmail: PRODUCTION_ACCOUNTS.seller.email,
       title: "New order received",
       message: "You have a new order waiting for fulfillment.",
       type: "info",
@@ -825,11 +845,14 @@ async function main() {
   }
 
   console.log("\n✅ Mock seed complete\n");
-  console.log("Accounts (password: 111111):");
-  console.log("  Admin:    admin@example.com");
-  console.log("  Sellers:  seller@example.com, seller2@mock.example.com, seller3@mock.example.com, seller4@mock.example.com");
+  console.log("Production accounts:");
+  console.log(`  Admin:    ${PRODUCTION_ACCOUNTS.admin.email} / ${PRODUCTION_ACCOUNTS.admin.password}`);
+  console.log(`  Seller:   ${PRODUCTION_ACCOUNTS.seller.email} / ${PRODUCTION_ACCOUNTS.seller.password}`);
+  console.log(`  Customer: ${PRODUCTION_ACCOUNTS.customer.email} / ${PRODUCTION_ACCOUNTS.customer.password}`);
+  console.log("Demo accounts (password: 111111):");
+  console.log("  Sellers:  seller2@mock.example.com, seller3@mock.example.com, seller4@mock.example.com");
   console.log("  Delivery: delivery@example.com, riderhub@mock.example.com");
-  console.log("  Customers: customer@example.com, jane.doe@mock.example.com, mike.wilson@mock.example.com, …");
+  console.log("  Customers: jane.doe@mock.example.com, mike.wilson@mock.example.com, …");
   console.log(`  Pickup locations: ${pickupPoints.length}`);
   console.log(`  Categories: ${categories.length + 1} (incl. smartphones)`);
   console.log(`  Sellers / stores: ${sellersData.length}`);
