@@ -2,6 +2,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { catalogProductVisibilityWhere } from "@/lib/storefront-catalog";
 import { jsonSuccess, jsonError } from "@/lib/api-response";
+import { dbContains } from "@/lib/db-contains";
 
 export const dynamic = "force-dynamic";
 
@@ -25,9 +26,9 @@ export async function GET(request) {
         catalogProductVisibilityWhere(),
         {
           OR: [
-            { name: { contains: q } },
-            { shortDescription: { contains: q } },
-            { description: { contains: q } },
+            { name: dbContains(q) },
+            { shortDescription: dbContains(q) },
+            { description: dbContains(q) },
           ],
         },
       ],

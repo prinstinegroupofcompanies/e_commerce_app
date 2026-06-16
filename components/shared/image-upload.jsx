@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Upload, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 /**
  * Uploads an image to /api/upload and returns the stored URL via onChange.
@@ -64,7 +65,7 @@ export function ImageUpload({
       >
         {value ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={value} alt="" className="h-full w-full object-cover" />
+          <img src={resolveMediaUrl(value)} alt="" className="h-full w-full object-cover" />
         ) : (
           <Upload className="h-5 w-5 text-muted-foreground" />
         )}

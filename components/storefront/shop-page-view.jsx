@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/storefront/product-card";
 import { ShopProductControls } from "@/components/storefront/shop-product-controls";
 import { cn } from "@/lib/utils";
 import { SITE_NAME } from "@/lib/brand";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 function Stars({ rating }) {
   const full = Math.round(rating);
@@ -56,7 +57,7 @@ export function ShopPageView({ seller, products, reviewStats, reviews, activeTab
         <div className="relative h-40 overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-accent/40 sm:h-52 md:h-64">
           {seller.shopBanner ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={seller.shopBanner} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <img src={resolveMediaUrl(seller.shopBanner)} alt="" className="absolute inset-0 h-full w-full object-cover" />
           ) : null}
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
         </div>
@@ -65,7 +66,7 @@ export function ShopPageView({ seller, products, reviewStats, reviews, activeTab
             <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border-4 border-background bg-card shadow-lg sm:h-28 sm:w-28">
               {seller.shopLogo ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={seller.shopLogo} alt={displayName} className="h-full w-full object-cover" />
+                <img src={resolveMediaUrl(seller.shopLogo)} alt={displayName} className="h-full w-full object-cover" />
               ) : (
                 <Store className="h-10 w-10 text-primary" />
               )}

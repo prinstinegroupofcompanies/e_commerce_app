@@ -1,28 +1,8 @@
-import path from "node:path";
-import fs from "node:fs/promises";
-import crypto from "node:crypto";
 import { jsonError, jsonSuccess } from "@/lib/api-response";
 import { requireSessionRoles } from "@/lib/api-auth";
+import { saveUploadedImage } from "@/lib/upload-storage";
 
 export const dynamic = "force-dynamic";
-
-const ALLOWED_MIME = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
-const MAX_BYTES = 4 * 1024 * 1024;
-
-function extFromMime(mime, fallback) {
-  switch (mime) {
-    case "image/png":
-      return ".png";
-    case "image/jpeg":
-      return ".jpg";
-    case "image/webp":
-      return ".webp";
-    case "image/gif":
-      return ".gif";
-    default:
-      return fallback || ".bin";
-  }
-}
 
 export async function POST(request) {
   const gate = await requireSessionRoles(["customer", "seller", "admin"]);
@@ -36,21 +16,29 @@ export async function POST(request) {
   }
 
   const file = form.get("file");
-  const folderRaw = String(form.get("folder") || "uploads").replace(/[^a-z0-9-]/gi, "");
-  const folder = folderRaw || "uploads";
+  const folder = String(form.get("folder") || "uploads");
 
   if (!file || typeof file === "string") return jsonError("No file provided", [], 422);
-  if (!ALLOWED_MIME.has(file.type)) return jsonError("Unsupported file type", [], 415);
-  if (file.size > MAX_BYTES) return jsonError("File too large (max 4MB)", [], 413);
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const ext = extFromMime(file.type, path.extname(file.name || ""));
-  const filename = `${Date.now()}-${crypto.randomBytes(8).toString("hex")}${ext}`;
-
-  const root = path.join(process.cwd(), "public", folder);
-  await fs.mkdir(root, { recursive: true });
-  await fs.writeFile(path.join(root, filename), buffer);
-
-  const url = `/${folder}/${filename}`;
-  return jsonSuccess({ url, size: file.size, type: file.type });
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const saved = await saveUploadedImage({
+      buffer,
+      mime: file.type,
+      originalName: file.name || "",
+      folder,
+    });
+    return jsonSuccess({
+      url: saved.url,
+      path: saved.relativePath,
+      size: saved.size,
+      type: saved.type,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Upload failed";
+    if (message.includes("Unsupported")) return jsonError(message, [], 415);
+    if (message.includes("too large")) return jsonError(message, [], 413);
+    console.error("[upload]", err);
+    return jsonError("Upload failed", [], 500);
+  }
 }

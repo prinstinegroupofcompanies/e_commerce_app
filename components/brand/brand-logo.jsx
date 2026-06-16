@@ -11,30 +11,44 @@ const heightClass = {
 
 /**
  * @param {{
- *   href?: string;
+ *   href?: string | null;
  *   size?: keyof typeof heightClass;
  *   className?: string;
  *   imageClassName?: string;
  *   priority?: boolean;
+ *   variant?: "default" | "splash";
  * }} props
  */
-export function BrandLogo({ href = "/", size = "md", className, imageClassName, priority }) {
+export function BrandLogo({
+  href = "/",
+  size = "md",
+  className,
+  imageClassName,
+  priority,
+  variant = "default",
+}) {
   const img = (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={LOGO_SRC}
       alt={SITE_NAME}
-      className={cn("w-auto object-contain object-left", heightClass[size], imageClassName)}
+      className={cn(
+        "w-auto object-contain bg-transparent",
+        heightClass[size],
+        variant === "splash" ? "drop-shadow-md" : "",
+        imageClassName
+      )}
+      style={{ background: "transparent" }}
       fetchPriority={priority ? "high" : undefined}
     />
   );
 
   if (href == null) {
-    return <span className={cn("inline-flex items-center", className)}>{img}</span>;
+    return <span className={cn("inline-flex items-center bg-transparent", className)}>{img}</span>;
   }
 
   return (
-    <Link href={href} className={cn("inline-flex shrink-0 items-center", className)}>
+    <Link href={href} className={cn("inline-flex shrink-0 items-center bg-transparent", className)}>
       {img}
     </Link>
   );

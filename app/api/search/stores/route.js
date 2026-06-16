@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { jsonSuccess, jsonError } from "@/lib/api-response";
+import { dbContains } from "@/lib/db-contains";
 
 export const dynamic = "force-dynamic";
 
@@ -24,11 +25,12 @@ export async function GET(request) {
       isShopActive: true,
       isActive: true,
       OR: [
-        { shopName: { contains: q } },
-        { shopDescription: { contains: q } },
-        { shopCity: { contains: q } },
-        { shopCounty: { contains: q } },
-        { businessCategory: { contains: q } },
+        { shopName: dbContains(q) },
+        { shopDescription: dbContains(q) },
+        { shopCity: dbContains(q) },
+        { shopCounty: dbContains(q) },
+        { businessCategory: dbContains(q) },
+        { name: dbContains(q) },
       ],
     };
 

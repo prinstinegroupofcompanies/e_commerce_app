@@ -14,7 +14,12 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const seller = await prisma.seller.findFirst({
-    where: { shopSlug: params.slug, isShopActive: true, isActive: true },
+    where: {
+      shopSlug: params.slug,
+      verificationStatus: "approved",
+      isShopActive: true,
+      isActive: true,
+    },
     select: { shopName: true, name: true, shopDescription: true },
   });
   if (!seller) return { title: "Shop not found" };
@@ -27,7 +32,12 @@ export async function generateMetadata({ params }) {
 
 export default async function ShopPage({ params, searchParams }) {
   const seller = await prisma.seller.findFirst({
-    where: { shopSlug: params.slug, isShopActive: true, isActive: true },
+    where: {
+      shopSlug: params.slug,
+      verificationStatus: "approved",
+      isShopActive: true,
+      isActive: true,
+    },
     select: {
       id: true,
       name: true,

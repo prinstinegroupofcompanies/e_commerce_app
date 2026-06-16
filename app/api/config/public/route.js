@@ -13,5 +13,9 @@ export async function GET() {
     vapidPublicKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || null,
     flutterwave: isFlutterwaveConfigured(),
     appName: process.env.NEXT_PUBLIC_APP_NAME || "Markay Hall",
+    uploadBaseUrl:
+      process.env.NEXT_PUBLIC_UPLOAD_BASE_URL ||
+      process.env.NEXT_PUBLIC_RENDER_BACKEND_URL ||
+      null,
   });
 }

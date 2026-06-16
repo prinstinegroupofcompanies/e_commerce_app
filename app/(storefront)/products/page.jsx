@@ -10,12 +10,14 @@ import {
 import { ProductFiltersSidebar } from "@/components/storefront/product-filters-sidebar";
 import { ProductPagination } from "@/components/storefront/product-pagination";
 import { ProductListControls } from "@/components/storefront/product-list-controls";
+import { StorefrontSearchBar } from "@/components/storefront/storefront-search-bar";
 import { cn } from "@/lib/utils";
+import { SITE_NAME } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-  return { title: "Products · ShopLIB" };
+  return { title: `Products · ${SITE_NAME}` };
 }
 
 export default async function ProductsPage({ searchParams }) {
@@ -70,8 +72,12 @@ export default async function ProductsPage({ searchParams }) {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <h1 className="text-3xl font-bold tracking-tight">All products</h1>
       <p className="mt-2 text-muted-foreground">
-        {total} items from verified sellers · ShopLIB marketplace
+        {total} items from verified sellers · {SITE_NAME}
       </p>
+
+      <div className="mt-6 max-w-xl">
+        <StorefrontSearchBar placeholder="Search products and stores from this catalog…" />
+      </div>
 
       <div className="mt-6">
         <Suspense fallback={<div className="h-9" aria-hidden />}>

@@ -53,7 +53,7 @@ export function AuthShell({ portal = "customer", children, className, showPortal
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col justify-center px-4 py-10 sm:px-6">
         <div className="mb-8 flex flex-col items-center text-center">
-          <BrandLogo href="/" size="xl" priority imageClassName="mx-auto drop-shadow-sm" />
+          <BrandLogo href="/" size="xl" priority variant="splash" imageClassName="mx-auto" />
           <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">{copy.badge}</p>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{copy.title}</h1>
           <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">{copy.subtitle}</p>

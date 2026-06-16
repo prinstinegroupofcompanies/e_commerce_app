@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Upload, Trash2, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 /**
  * @param {{
@@ -90,7 +91,7 @@ export function MultiImageUpload({ value = [], onChange, folder = "products", ma
             )}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={url} alt="" className="h-full w-full object-cover" />
+            <img src={resolveMediaUrl(url)} alt="" className="h-full w-full object-cover" />
             {i === 0 ? (
               <span className="absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">
                 Main
