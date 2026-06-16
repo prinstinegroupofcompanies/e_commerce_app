@@ -1,3 +1,5 @@
+import { SITE_NAME } from "@/lib/brand";
+import { createSectionMetadata } from "@/lib/site-metadata";
 import { StorefrontHeader } from "@/components/storefront/storefront-header";
 import { StorefrontFooter } from "@/components/storefront/storefront-footer";
 import { CartDrawer } from "@/components/storefront/cart-drawer";
@@ -5,7 +7,8 @@ import { CartRemoteSync } from "@/components/storefront/cart-remote-sync";
 import { CompareBar } from "@/components/storefront/compare-bar";
 import { ShopAssistant } from "@/components/chat/shop-assistant";
 import { InteractionTracker } from "@/components/chat/interaction-tracker";
-import { SITE_NAME } from "@/lib/brand";
+
+export const metadata = createSectionMetadata("Shop", `Browse products and stores on ${SITE_NAME}`);
 
 export default function StorefrontLayout({ children }) {
   return (
