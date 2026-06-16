@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { resolveMediaUrl } from "@/lib/upload-url";
+import { uploadImageFile } from "@/lib/upload-client";
 
 /**
  * @param {{
@@ -99,19 +101,11 @@ export function BannerEditorRow({ banner }) {
     if (!file) return;
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("folder", "banners");
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const json = await res.json();
-      if (json.success) {
-        setForm((f) => ({ ...f, image: json.data.url }));
-        toast.success("Image uploaded");
-      } else {
-        toast.error(json.error || "Upload failed");
-      }
-    } catch {
-      toast.error("Upload error");
+      const path = await uploadImageFile(file, "uploads/banners");
+      setForm((f) => ({ ...f, image: path || "" }));
+      toast.success("Image uploaded");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload error");
     }
     setUploading(false);
   }
@@ -123,7 +117,7 @@ export function BannerEditorRow({ banner }) {
           <div className="relative w-40 shrink-0 overflow-hidden rounded-lg border bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={form.image}
+              src={resolveMediaUrl(form.image)}
               alt={form.title}
               className="aspect-video w-full object-cover"
             />
@@ -208,7 +202,7 @@ export function BannerEditorRow({ banner }) {
       <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground/50" />
       <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-lg border bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={banner.image} alt={banner.title} className="h-full w-full object-cover" />
+        <img src={resolveMediaUrl(banner.image)} alt={banner.title} className="h-full w-full object-cover" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="font-medium">{banner.title}</p>

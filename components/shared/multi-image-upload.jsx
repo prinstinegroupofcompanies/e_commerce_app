@@ -6,6 +6,7 @@ import { Upload, Trash2, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/upload-url";
+import { uploadImageFile } from "@/lib/upload-client";
 
 /**
  * @param {{
@@ -21,15 +22,7 @@ export function MultiImageUpload({ value = [], onChange, folder = "products", ma
   const [dragIdx, setDragIdx] = useState(null);
 
   async function uploadFile(file) {
-    const body = new FormData();
-    body.append("file", file);
-    body.append("folder", folder);
-    const res = await fetch("/api/upload", { method: "POST", body });
-    const j = await res.json();
-    if (!res.ok || !j.success) {
-      throw new Error(j.error || "Upload failed");
-    }
-    return j.data?.url;
+    return uploadImageFile(file, folder);
   }
 
   async function handleFiles(fileList) {
@@ -127,7 +120,7 @@ export function MultiImageUpload({ value = [], onChange, folder = "products", ma
       <input
         ref={ref}
         type="file"
-        accept="image/png,image/jpeg,image/webp,image/gif"
+        accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/heic,image/heif"
         multiple
         className="hidden"
         onChange={(e) => handleFiles(e.target.files)}
@@ -145,7 +138,7 @@ export function MultiImageUpload({ value = [], onChange, folder = "products", ma
           {uploading ? "Uploading…" : "Upload images"}
         </Button>
         <p className="text-xs text-muted-foreground">
-          PNG, JPG, WEBP or GIF. First image is the main thumbnail. Drag to reorder.
+          PNG, JPG, WEBP, GIF, AVIF or HEIC up to 15MB. First image is the main thumbnail. Drag to reorder.
         </p>
       </div>
     </div>

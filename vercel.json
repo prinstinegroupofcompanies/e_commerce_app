@@ -3,5 +3,14 @@
   "framework": "nextjs",
   "buildCommand": "node scripts/prepare-prisma.js && npx prisma generate && npm run build",
   "installCommand": "npm install",
-  "regions": ["iad1"]
+  "regions": ["iad1"],
+  "functions": {
+    "app/api/upload/route.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "app/api/upload/token/route.js": {
+      "maxDuration": 15
+    }
+  }
 }

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Upload, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { resolveMediaUrl } from "@/lib/upload-url";
+import { uploadImageFile } from "@/lib/upload-client";
 
 /**
  * Uploads an image to /api/upload and returns the stored URL via onChange.
@@ -24,7 +25,7 @@ export function ImageUpload({
   onChange,
   folder = "uploads",
   label = "Upload image",
-  accept = "image/png,image/jpeg,image/webp,image/gif",
+  accept = "image/png,image/jpeg,image/webp,image/gif,image/avif,image/heic,image/heif",
   shape = "circle",
   size = 80,
 }) {
@@ -35,19 +36,11 @@ export function ImageUpload({
     if (!file) return;
     setUploading(true);
     try {
-      const body = new FormData();
-      body.append("file", file);
-      body.append("folder", folder);
-      const res = await fetch("/api/upload", { method: "POST", body });
-      const j = await res.json();
-      if (!res.ok || !j.success) {
-        toast.error(j.error || "Upload failed");
-      } else {
-        onChange(j.data?.url || null);
-        toast.success("Uploaded");
-      }
-    } catch {
-      toast.error("Network error");
+      const path = await uploadImageFile(file, folder);
+      onChange(path);
+      toast.success("Uploaded");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
     }
     setUploading(false);
     if (ref.current) ref.current.value = "";
@@ -102,7 +95,7 @@ export function ImageUpload({
             </Button>
           ) : null}
         </div>
-        <p className="text-xs text-muted-foreground">PNG, JPG, WEBP or GIF up to 4MB.</p>
+        <p className="text-xs text-muted-foreground">PNG, JPG, WEBP, GIF, AVIF or HEIC up to 15MB.</p>
       </div>
     </div>
   );

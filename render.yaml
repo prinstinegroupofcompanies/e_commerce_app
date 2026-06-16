@@ -43,6 +43,8 @@ services:
         value: Markay Hall
       - key: CRON_SECRET
         generateValue: true
+      - key: UPLOAD_PUBLIC_ROOT
+        value: /opt/render/project/src/public
       - key: REQUIRE_EMAIL_VERIFICATION
         value: "true"
     disk:

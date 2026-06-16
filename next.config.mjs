@@ -18,7 +18,7 @@ function hostnameFromEnv(name) {
 }
 
 const imageHosts = new Set(["images.unsplash.com"]);
-for (const key of ["NEXT_PUBLIC_APP_URL", "RENDER_BACKEND_URL"]) {
+for (const key of ["NEXT_PUBLIC_APP_URL", "RENDER_BACKEND_URL", "NEXT_PUBLIC_UPLOAD_BASE_URL"]) {
   const host = hostnameFromEnv(key);
   if (host) imageHosts.add(host);
 }
@@ -36,15 +36,11 @@ const nextConfig = {
   },
   async rewrites() {
     if (!backend) return [];
-    // Keep /api/auth and other local API routes on Vercel (filesystem wins over fallback).
-    // Proxy uploads API + static files to Render for persistent disk storage.
+    // Serve uploaded files from Render persistent disk (upload API uses direct client → Render).
     return {
-      beforeFiles: [
-        { source: "/api/upload", destination: `${backend}/api/upload` },
-        { source: "/api/upload/:path*", destination: `${backend}/api/upload/:path*` },
-      ],
       fallback: [
         { source: "/uploads/:path*", destination: `${backend}/uploads/:path*` },
+        { source: "/products/:path*", destination: `${backend}/products/:path*` },
       ],
     };
   },

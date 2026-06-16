@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 export default function StoresSearchPage() {
   const [q, setQ] = useState("");
@@ -47,7 +48,7 @@ export default function StoresSearchPage() {
             <CardContent className="flex gap-4 p-5">
               {s.shopLogo ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={s.shopLogo} alt="" className="h-14 w-14 rounded-lg object-cover" />
+                <img src={resolveMediaUrl(s.shopLogo)} alt="" className="h-14 w-14 rounded-lg object-cover" />
               ) : (
                 <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-muted text-lg font-bold">
                   {(s.shopName || "?")[0]}

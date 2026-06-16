@@ -80,7 +80,8 @@ Vercel proxies `/api/*` and `/uploads/*` to Render so the browser stays on one o
    | `NEXTAUTH_URL` | `https://your-app.vercel.app` |
    | `NEXT_PUBLIC_APP_URL` | Same as `NEXTAUTH_URL` |
    | `RENDER_BACKEND_URL` | `https://markay-hall-api.onrender.com` |
-   | `CRON_SECRET` | Same as on Render |
+   | `NEXT_PUBLIC_UPLOAD_BASE_URL` | Same as `RENDER_BACKEND_URL` (optional; improves image URLs in emails) |
+   | `CRON_SECRET` | Same as on Render (also signs upload tokens) |
    | Payment / SMS / SMTP / VAPID vars | Mirror Render |
 
 4. Deploy.
@@ -130,7 +131,9 @@ npm run dev
 | Auth cookies not sticking | `NEXTAUTH_URL` must exactly match the browser URL (scheme + host, no trailing slash). |
 | Auth login fails on Vercel | Set `AUTH_SECRET` and `NEXTAUTH_SECRET` to the same value. Run bootstrap-users endpoint. Auth runs on Vercel, not Render. |
 | API 502 from Vercel | Render service may be restarting after deploy; check Render logs. |
-| Uploads 404 on Vercel | Ensure `RENDER_BACKEND_URL` is set and Render disk is mounted at `public/uploads`. |
+| Uploads 404 on Vercel | Ensure `RENDER_BACKEND_URL` is set and Render disk is mounted at `public/uploads`. Re-upload images if URLs are bare filenames from an older bug. |
+| Upload 502 on Vercel | Fixed: browser uploads go direct to Render via `/api/upload/token`. Ensure `CRON_SECRET` matches on Vercel and Render. |
+| Upload too large | Max 15MB per image; use direct Render upload (automatic in production). |
 | Prisma errors on Vercel build | `DATABASE_URL` must be Postgres **external** URL. |
 | Cron unauthorized | `CRON_SECRET` must match on Render API and cron services. |
 
