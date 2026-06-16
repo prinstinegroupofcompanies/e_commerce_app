@@ -10,7 +10,12 @@ export const runtime = "nodejs";
  * @param {string} filename
  */
 function renderMediaUrl(filename) {
-  const backend = process.env.RENDER_BACKEND_URL?.replace(/\/$/, "");
+  const backend = (
+    process.env.RENDER_BACKEND_URL ||
+    process.env.NEXT_PUBLIC_UPLOAD_BASE_URL ||
+    process.env.NEXT_PUBLIC_RENDER_BACKEND_URL ||
+    ""
+  ).replace(/\/$/, "");
   if (!backend) return null;
   return `${backend}/api/media/${encodeURIComponent(filename)}`;
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 /**
  * @param {{
@@ -19,7 +20,7 @@ export function ProductImageGallery({
   activeIndex: controlledIndex,
   onIndexChange,
 }) {
-  const safe = images.length ? images : ["/placeholder-product.svg"];
+  const safe = (images.length ? images : ["/placeholder-product.svg"]).map((src) => resolveMediaUrl(src));
   const [internalIdx, setInternalIdx] = useState(0);
   const idx = controlledIndex ?? internalIdx;
   const main = safe[Math.min(idx, safe.length - 1)];

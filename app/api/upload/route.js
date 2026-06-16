@@ -1,6 +1,6 @@
 import { jsonError, jsonSuccess } from "@/lib/api-response";
 import { requireSessionRoles } from "@/lib/api-auth";
-import { verifyUploadToken } from "@/lib/upload-auth";
+import { verifyUploadToken, createUploadToken } from "@/lib/upload-auth";
 import { uploadCorsHeaders } from "@/lib/upload-cors";
 import { saveUploadedImage } from "@/lib/upload-storage";
 import { toStoredUploadPath } from "@/lib/upload-url";
@@ -8,6 +8,10 @@ import { toStoredUploadPath } from "@/lib/upload-url";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 60;
+
+function renderBackend() {
+  return process.env.RENDER_BACKEND_URL?.replace(/\/$/, "") || null;
+}
 
 /**
  * @param {Response} response
@@ -28,6 +32,41 @@ async function authorizeUpload(request) {
     return { ok: true, claims };
   }
   return requireSessionRoles(["customer", "seller", "admin"]);
+}
+
+/**
+ * Forward upload to Render so files land on persistent disk (Vercel filesystem is ephemeral).
+ * @param {import("@/lib/api-auth").SessionGate & { ok: true }} gate
+ * @param {FormData} form
+ */
+async function proxyUploadToRender(gate, form) {
+  const backend = renderBackend();
+  if (!backend) return null;
+
+  const file = form.get("file");
+  const folder = String(form.get("folder") || "uploads");
+  if (!file || typeof file === "string") return null;
+
+  const userId = gate.claims?.userId || gate.session?.user?.id;
+  const role = gate.claims?.role || gate.role;
+  if (!userId || !role) return null;
+
+  const token = createUploadToken(userId, role);
+  const forward = new FormData();
+  forward.append("file", file);
+  forward.append("folder", folder);
+
+  const upstream = await fetch(`${backend}/api/upload`, {
+    method: "POST",
+    headers: { "X-Upload-Token": token },
+    body: forward,
+  });
+
+  const text = await upstream.text();
+  return new Response(text, {
+    status: upstream.status,
+    headers: { "Content-Type": "application/json" },
+  });
 }
 
 export async function OPTIONS(request) {
@@ -53,6 +92,17 @@ export async function POST(request) {
 
   if (!file || typeof file === "string") return withHeaders(jsonError("No file provided", [], 422), cors);
 
+  // Vercel: never write uploads locally — proxy to Render persistent storage.
+  if (renderBackend() && !request.headers.get("x-upload-token")) {
+    try {
+      const proxied = await proxyUploadToRender(gate, form);
+      if (proxied) return withHeaders(proxied, cors);
+    } catch (err) {
+      console.error("[upload proxy]", err);
+      return withHeaders(jsonError("Upload server unavailable", [], 502), cors);
+    }
+  }
+
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
     const saved = await saveUploadedImage({
@@ -61,11 +111,11 @@ export async function POST(request) {
       originalName: file.name || "",
       folder,
     });
-    const path = toStoredUploadPath(saved.relativePath);
+    const storedPath = toStoredUploadPath(saved.relativePath);
     return withHeaders(
       jsonSuccess({
-        path,
-        url: path,
+        path: storedPath,
+        url: storedPath,
         size: saved.size,
         type: saved.type,
       }),
