@@ -39,6 +39,7 @@ const nextConfig = {
     // Serve uploaded files from Render persistent disk (upload API uses direct client → Render).
     return {
       fallback: [
+        { source: "/api/media/:path*", destination: `${backend}/api/media/:path*` },
         { source: "/uploads/:path*", destination: `${backend}/uploads/:path*` },
         { source: "/products/:path*", destination: `${backend}/products/:path*` },
       ],

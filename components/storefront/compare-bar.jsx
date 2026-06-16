@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Scale, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCompareStore } from "@/store/compare-store";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 export function CompareBar() {
   const ids = useCompareStore((s) => s.ids);
@@ -52,7 +53,7 @@ export function CompareBar() {
               >
                 {p.thumbnail ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.thumbnail} alt={p.name} className="h-7 w-7 rounded object-cover" />
+                  <img src={resolveMediaUrl(p.thumbnail)} alt={p.name} className="h-7 w-7 rounded object-cover" />
                 ) : null}
                 <span className="max-w-[120px] truncate">{p.name}</span>
                 <button

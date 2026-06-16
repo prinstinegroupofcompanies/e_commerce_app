@@ -2,6 +2,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { jsonSuccess, jsonError } from "@/lib/api-response";
 import { requireSessionRoles } from "@/lib/api-auth";
+import { toStoredUploadPath } from "@/lib/upload-url";
 export const dynamic = "force-dynamic";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -73,8 +74,12 @@ export async function PATCH(request) {
         ...(data.shopName != null ? { shopName: data.shopName } : {}),
         ...(data.shopSlug != null ? { shopSlug: data.shopSlug } : {}),
         ...(data.shopDescription !== undefined ? { shopDescription: data.shopDescription } : {}),
-        ...(data.shopLogo !== undefined ? { shopLogo: data.shopLogo } : {}),
-        ...(data.shopBanner !== undefined ? { shopBanner: data.shopBanner } : {}),
+        ...(data.shopLogo !== undefined
+          ? { shopLogo: data.shopLogo ? toStoredUploadPath(data.shopLogo) : null }
+          : {}),
+        ...(data.shopBanner !== undefined
+          ? { shopBanner: data.shopBanner ? toStoredUploadPath(data.shopBanner) : null }
+          : {}),
         ...(data.shopAddress !== undefined ? { shopAddress: data.shopAddress } : {}),
         ...(data.shopCity !== undefined ? { shopCity: data.shopCity } : {}),
         ...(data.shopCountry !== undefined ? { shopCountry: data.shopCountry } : {}),

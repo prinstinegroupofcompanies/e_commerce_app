@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 const KEY = "shoplib_recent_products";
 
@@ -63,7 +64,7 @@ export function RecentlyViewedRail({ excludeId, limit = 8, title = "Recently vie
               {p.thumbnail ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={p.thumbnail}
+                  src={resolveMediaUrl(p.thumbnail)}
                   alt={p.name}
                   className="h-full w-full object-cover transition group-hover:scale-105"
                 />

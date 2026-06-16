@@ -5,6 +5,7 @@ import { RecentlyViewedRail } from "@/components/storefront/recently-viewed-rail
 import { AutoCarousel } from "@/components/shared/auto-carousel";
 import { Button } from "@/components/ui/button";
 import { SITE_NAME } from "@/lib/brand";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 /**
  * @param {{
@@ -72,7 +73,7 @@ export function HomePageView({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={primary.image}
+                  src={resolveMediaUrl(primary.image)}
                   alt={primary.title}
                   className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
                 />
@@ -96,7 +97,7 @@ export function HomePageView({
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={b.image}
+                      src={resolveMediaUrl(b.image)}
                       alt=""
                       className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
                     />
@@ -145,7 +146,7 @@ export function HomePageView({
                 >
                   {ad.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={ad.image} alt={ad.title} className="h-36 w-full object-cover transition group-hover:scale-[1.02]" />
+                    <img src={resolveMediaUrl(ad.image)} alt={ad.title} className="h-36 w-full object-cover transition group-hover:scale-[1.02]" />
                   ) : (
                     <div className="flex h-36 items-center justify-center bg-muted text-sm text-muted-foreground">{ad.title}</div>
                   )}
@@ -263,7 +264,7 @@ export function HomePageView({
                       {c.image ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={c.image}
+                          src={resolveMediaUrl(c.image)}
                           alt=""
                           className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
                         />
@@ -304,7 +305,7 @@ export function HomePageView({
                 >
                   {b.logo ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={b.logo} alt={b.name} className="max-h-9 max-w-[100px] object-contain grayscale transition hover:grayscale-0 md:max-h-10" />
+                    <img src={resolveMediaUrl(b.logo)} alt={b.name} className="max-h-9 max-w-[100px] object-contain grayscale transition hover:grayscale-0 md:max-h-10" />
                   ) : (
                     <span className="text-center text-xs font-semibold leading-tight text-foreground md:text-sm">{b.name}</span>
                   )}
@@ -392,7 +393,7 @@ export function HomePageView({
                     {s.shopBanner ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={s.shopBanner}
+                        src={resolveMediaUrl(s.shopBanner)}
                         alt=""
                         className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.05]"
                       />
@@ -403,7 +404,7 @@ export function HomePageView({
                     <div className="absolute -bottom-8 left-5 flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border-4 border-card bg-card shadow-lg ring-2 ring-primary/20">
                       {s.shopLogo ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={s.shopLogo} alt="" className="h-full w-full object-cover" />
+                        <img src={resolveMediaUrl(s.shopLogo)} alt="" className="h-full w-full object-cover" />
                       ) : (
                         <Store className="h-7 w-7 text-primary" aria-hidden />
                       )}

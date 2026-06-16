@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { CartGuestReminder } from "@/components/storefront/cart-guest-reminder";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 export default function CartPage() {
   const items = useCartStore((s) => s.items);
@@ -46,7 +47,7 @@ export default function CartPage() {
             <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={line.image || "/placeholder-product.svg"}
+                src={resolveMediaUrl(line.image) || "/placeholder-product.svg"}
                 alt=""
                 className="h-24 w-24 rounded-md border object-cover"
               />

@@ -11,6 +11,7 @@ import { getVisitorKey, trackInteraction } from "@/lib/analytics/track-client";
 import { useVisitorKey } from "@/hooks/use-visitor-key";
 import { SITE_NAME } from "@/lib/brand";
 import { cn } from "@/lib/utils";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 const SESSION_KEY = "shoplib_chat_session";
 
@@ -219,7 +220,7 @@ export function ShopAssistant() {
                 >
                   <div className="relative aspect-square bg-muted">
                     <Image
-                      src={p.thumbnail || "/placeholder-product.svg"}
+                      src={resolveMediaUrl(p.thumbnail) || "/placeholder-product.svg"}
                       alt={p.name}
                       fill
                       className="object-cover"

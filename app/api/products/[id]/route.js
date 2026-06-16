@@ -5,6 +5,7 @@ import { requireSessionRoles } from "@/lib/api-auth";
 import { productCreateBodySchema, productUpdateBodySchema } from "@/lib/validators/product";
 import { fireBackInStockAlerts } from "@/lib/stock-alerts";
 import { syncProductVariants, sumVariantStock } from "@/lib/product-variants";
+import { normalizeMediaFields } from "@/lib/upload-url";
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +69,9 @@ export async function PUT(request, { params }) {
       return jsonError("Validation failed", parsed.error.flatten().fieldErrors, 422);
     }
     const data = parsed.data;
+    const media = normalizeMediaFields({ thumbnail: data.thumbnail, images: data.images });
+    if (media.thumbnail !== undefined) data.thumbnail = media.thumbnail;
+    if (media.images !== undefined) data.images = media.images;
     const { variants, ...productData } = data;
 
     if (productData.slug !== undefined && productData.slug !== existing.slug) {

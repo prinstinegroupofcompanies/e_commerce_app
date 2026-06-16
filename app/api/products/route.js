@@ -6,6 +6,7 @@ import { catalogProductVisibilityWhere } from "@/lib/storefront-catalog";
 import { requireSessionRoles } from "@/lib/api-auth";
 import { productCreateBodySchema } from "@/lib/validators/product";
 import { syncProductVariants, sumVariantStock } from "@/lib/product-variants";
+import { normalizeMediaFields } from "@/lib/upload-url";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,9 @@ export async function POST(request) {
       return jsonError("Validation failed", parsed.error.flatten().fieldErrors, 422);
     }
     const data = { ...parsed.data };
+    const media = normalizeMediaFields({ thumbnail: data.thumbnail, images: data.images });
+    if (media.thumbnail !== undefined) data.thumbnail = media.thumbnail;
+    if (media.images !== undefined) data.images = media.images;
 
     if (gate.role === "seller") {
       data.sellerId = gate.session.user.id;

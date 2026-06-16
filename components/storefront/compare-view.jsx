@@ -5,6 +5,7 @@ import Link from "next/link";
 import { X, Scale, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCompareStore } from "@/store/compare-store";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 const ROWS = [
   { key: "price", label: "Price", format: (p) => `$${p.price?.toFixed(2) ?? "—"}` },
@@ -121,7 +122,7 @@ export function CompareView() {
                       <div className="aspect-square w-24 overflow-hidden rounded-md bg-muted">
                         {p.thumbnail ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={p.thumbnail} alt={p.name} className="h-full w-full object-cover" />
+                          <img src={resolveMediaUrl(p.thumbnail)} alt={p.name} className="h-full w-full object-cover" />
                         ) : null}
                       </div>
                       <span className="line-clamp-2 max-w-[160px] text-sm font-semibold">{p.name}</span>

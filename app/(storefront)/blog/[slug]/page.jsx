@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { SITE_NAME } from "@/lib/brand";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 export const revalidate = 120;
 
@@ -89,7 +90,7 @@ export default async function BlogPostPage({ params }) {
       {post.thumbnail ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={post.thumbnail}
+          src={resolveMediaUrl(post.thumbnail)}
           alt={post.title}
           className="mt-8 w-full rounded-lg object-cover"
         />

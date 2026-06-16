@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart-store";
 import { useUiStore } from "@/store/ui-store";
 import { CartGuestReminder } from "@/components/storefront/cart-guest-reminder";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 export function CartDrawer() {
   const open = useUiStore((s) => s.cartOpen);
@@ -49,7 +50,7 @@ export function CartDrawer() {
                   <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md border bg-muted">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={line.image || "/placeholder-product.svg"}
+                      src={resolveMediaUrl(line.image) || "/placeholder-product.svg"}
                       alt=""
                       className="h-full w-full object-cover"
                     />

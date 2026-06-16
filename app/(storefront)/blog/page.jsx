@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { SITE_NAME } from "@/lib/brand";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 export const revalidate = 120;
 
@@ -65,7 +66,7 @@ export default async function BlogIndexPage({ searchParams }) {
                       <Link href={`/blog/${post.slug}`} className="block">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={post.thumbnail}
+                          src={resolveMediaUrl(post.thumbnail)}
                           alt={post.title}
                           className="h-48 w-full object-cover"
                         />
