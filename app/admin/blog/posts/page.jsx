@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { InlineCreateForm } from "@/components/admin/inline-create-form";
 import { SimpleToggleButton } from "@/components/admin/simple-toggle-button";
 
 export const dynamic = "force-dynamic";
@@ -23,16 +24,9 @@ export default async function AdminBlogPostsPage() {
           <h1 className="text-2xl font-bold tracking-tight">Blog posts</h1>
           <p className="text-sm text-muted-foreground">Manage articles published on the storefront.</p>
         </div>
-        <InlineCreateForm
-          endpoint="/api/admin/blog/posts"
-          triggerLabel="New post"
-          fields={[
-            { key: "title", label: "Title", required: true },
-            { key: "slug", label: "Slug", placeholder: "auto", omitIfEmpty: true },
-            { key: "excerpt", label: "Excerpt", emptyAsNull: true },
-          ]}
-          payloadDefaults={{ isPublished: false }}
-        />
+        <Button asChild>
+          <Link href="/admin/blog/posts/new">New post</Link>
+        </Button>
       </div>
 
       <div className="rounded-md border bg-card">
@@ -72,13 +66,18 @@ export default async function AdminBlogPostsPage() {
                     )}
                   </TableCell>
                   <TableCell className="text-right">
-                    <SimpleToggleButton
-                      endpoint={`/api/admin/blog/posts/${p.id}`}
-                      field="isPublished"
-                      value={p.isPublished}
-                      labelOn="Unpublish"
-                      labelOff="Publish"
-                    />
+                    <div className="flex items-center justify-end gap-2">
+                      <Button variant="outline" size="sm" asChild>
+                        <Link href={`/admin/blog/posts/${p.id}/edit`}>Edit</Link>
+                      </Button>
+                      <SimpleToggleButton
+                        endpoint={`/api/admin/blog/posts/${p.id}`}
+                        field="isPublished"
+                        value={p.isPublished}
+                        labelOn="Unpublish"
+                        labelOff="Publish"
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

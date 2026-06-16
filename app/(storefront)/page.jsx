@@ -5,7 +5,7 @@ import { HomePageView } from "@/components/storefront/home-page-view";
 import { SITE_NAME } from "@/lib/brand";
 import { getActiveStoreAdvertisements } from "@/lib/store-ads";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   return {
@@ -29,7 +29,7 @@ export default async function HomePage() {
     prisma.banner.findMany({
       where: { isActive: true, position: "homepage" },
       orderBy: { sortOrder: "asc" },
-      take: 5,
+      take: 3,
     }),
     getActiveStoreAdvertisements(),
     prisma.product.findMany({

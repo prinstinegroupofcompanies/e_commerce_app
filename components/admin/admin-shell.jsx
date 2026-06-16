@@ -15,6 +15,8 @@ const links = [
   { href: "/admin/delivery-companies", label: "Delivery" },
   { href: "/admin/customers", label: "Customers" },
   { href: "/admin/categories", label: "Categories" },
+  { href: "/admin/homepage-banners", label: "Homepage banners" },
+  { href: "/admin/blog/posts", label: "Blog" },
   { href: "/admin/marketing/coupons", label: "Marketing" },
   { href: "/admin/reports", label: "Reports" },
   { href: "/admin/analytics", label: "Shop analytics" },

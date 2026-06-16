@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { resolveMediaUrl } from "@/lib/upload-url";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Blog",

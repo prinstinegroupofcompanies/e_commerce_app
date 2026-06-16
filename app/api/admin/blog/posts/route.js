@@ -14,6 +14,8 @@ const schema = z.object({
   thumbnail: z.string().max(2000).optional().nullable(),
   categoryId: z.string().optional().nullable(),
   isPublished: z.boolean().default(false),
+  metaTitle: z.string().max(250).optional().nullable(),
+  metaDesc: z.string().max(500).optional().nullable(),
 });
 
 export async function POST(request) {
@@ -36,6 +38,8 @@ export async function POST(request) {
       categoryId: parsed.data.categoryId || null,
       isPublished: parsed.data.isPublished,
       publishedAt: parsed.data.isPublished ? new Date() : null,
+      metaTitle: parsed.data.metaTitle ?? null,
+      metaDesc: parsed.data.metaDesc ?? null,
     },
   });
   return jsonSuccess(created, {}, 201);
