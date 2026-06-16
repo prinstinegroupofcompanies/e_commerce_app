@@ -36,16 +36,32 @@ export function HomepageBannersEditor({ banners }) {
   }
 
   async function save() {
+    const payload = form.map((slot, index) => ({
+      id: slot.id,
+      title: slot.title.trim() || `Hero banner ${index + 1}`,
+      image: slot.image.trim() || "/placeholder-banner.svg",
+      link: slot.link.trim() || null,
+      isActive: slot.isActive,
+    }));
+
+    for (const slot of payload) {
+      if (!slot.id) {
+        toast.error("Banner data is incomplete — refresh the page and try again");
+        return;
+      }
+    }
+
     setSaving(true);
     try {
       const res = await fetch("/api/admin/banners/homepage", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ banners: form }),
+        body: JSON.stringify({ banners: payload }),
       });
       const json = await res.json();
       if (!json.success) {
-        toast.error(json.error || "Save failed");
+        const detail = json.errors ? Object.values(json.errors).flat().join(" ") : "";
+        toast.error(detail ? `${json.error}: ${detail}` : json.error || "Save failed");
       } else {
         toast.success("Homepage banners saved — changes are live on refresh");
         router.refresh();
