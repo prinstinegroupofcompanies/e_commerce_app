@@ -13,8 +13,8 @@ export default function AdminEcommerceSettingsPage() {
         group="ecommerce"
         title="Storefront"
         fields={[
-          { key: "free_shipping_threshold", label: "Free shipping threshold ($)", type: "number", default: "50" },
-          { key: "default_shipping_cost", label: "Default shipping cost ($)", type: "number", default: "5.99" },
+          { key: "free_shipping_threshold", label: "Free delivery threshold ($)", type: "number", default: "50" },
+          { key: "default_shipping_cost", label: "Default delivery cost ($)", type: "number", default: "5.99" },
           { key: "default_currency", label: "Default currency", default: "USD" },
           { key: "tax_inclusive_prices", label: "Prices are tax-inclusive", type: "checkbox" },
           { key: "guest_checkout_enabled", label: "Allow guest checkout", type: "checkbox", default: "true" },

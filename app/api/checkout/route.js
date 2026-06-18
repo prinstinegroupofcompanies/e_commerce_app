@@ -65,6 +65,8 @@ export async function POST(request) {
       guestName,
       deliveryType,
       pickupPointId,
+      deliveryCompanyId,
+      deliverySpeed,
     } = parsed.data;
     const isPickup = deliveryType === "pickup";
 

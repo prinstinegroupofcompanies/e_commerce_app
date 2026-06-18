@@ -147,7 +147,7 @@ export default function CartPage() {
             <CartGuestReminder />
             <CartGuestReminder />
             <p className="text-xs text-muted-foreground">
-              Shipping and taxes are estimated at checkout.
+              Delivery and taxes are estimated at checkout.
             </p>
             <Button className="w-full" asChild>
               <Link href="/checkout">Proceed to checkout</Link>

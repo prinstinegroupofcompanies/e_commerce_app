@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { formatOrderStatus } from "@/lib/order-labels";
 
 export async function CustomerOrdersList() {
   const session = await auth();
@@ -68,7 +69,7 @@ export async function CustomerOrdersList() {
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className="capitalize">
-                      {o.orderStatus}
+                      {formatOrderStatus(o.orderStatus)}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">

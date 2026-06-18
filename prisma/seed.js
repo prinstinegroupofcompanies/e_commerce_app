@@ -709,7 +709,7 @@ async function main() {
     },
     {
       customerEmail: "jane.doe@mock.example.com",
-      title: "Order shipped",
+      title: "Order out for delivery",
       message: "Your recent order is on the way.",
       type: "success",
       link: "/dashboard/orders",

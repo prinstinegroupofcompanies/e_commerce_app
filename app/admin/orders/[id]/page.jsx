@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 import { AdminOrderStatusForm } from "@/components/admin/admin-order-status-form";
+import { formatOrderStatus } from "@/lib/order-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -67,8 +68,8 @@ export default async function AdminOrderDetailPage({ params }) {
           {order.isPickup ? (
             <Badge variant="outline">Pickup</Badge>
           ) : null}
-          <Badge variant="secondary" className="capitalize">
-            {order.orderStatus}
+          <Badge variant="secondary">
+            {formatOrderStatus(order.orderStatus)}
           </Badge>
           <Button asChild variant="outline" size="sm">
             <Link href={`/admin/orders/${order.id}/invoice`}>
@@ -161,7 +162,7 @@ export default async function AdminOrderDetailPage({ params }) {
                 <span className="tabular-nums">${order.subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Shipping</span>
+                <span className="text-muted-foreground">Delivery</span>
                 <span className="tabular-nums">${order.shippingCost.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
@@ -190,7 +191,7 @@ export default async function AdminOrderDetailPage({ params }) {
 
           <Card>
             <CardHeader className="border-b bg-muted/40 py-4">
-              <CardTitle className="text-base">{order.isPickup ? "Pickup location" : "Shipping address"}</CardTitle>
+              <CardTitle className="text-base">{order.isPickup ? "Pickup location" : "Delivery address"}</CardTitle>
             </CardHeader>
             <CardContent className="p-5 text-sm leading-relaxed text-muted-foreground">
               {order.isPickup ? (

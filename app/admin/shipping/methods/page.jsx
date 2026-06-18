@@ -7,7 +7,7 @@ import { InlineCreateForm } from "@/components/admin/inline-create-form";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Shipping profiles" };
+export const metadata = { title: "Delivery profiles" };
 
 export default async function AdminShippingProfilesPage() {
   await auth();
@@ -23,7 +23,7 @@ export default async function AdminShippingProfilesPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Shipping profiles</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Delivery profiles</h1>
           <p className="text-sm text-muted-foreground">Group rates by region and product type.</p>
         </div>
         <InlineCreateForm
@@ -39,7 +39,7 @@ export default async function AdminShippingProfilesPage() {
       {profiles.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center text-sm text-muted-foreground">
-            No shipping profiles yet.
+            No delivery profiles yet.
           </CardContent>
         </Card>
       ) : (

@@ -1,4 +1,5 @@
 import { LOGO_SRC, SITE_NAME } from "@/lib/brand";
+import { formatOrderStatus } from "@/lib/order-labels";
 
 function parseAddress(raw) {
   try {
@@ -28,7 +29,7 @@ export function OrderInvoice({ order, currency = "$" }) {
           <p className="text-xs text-slate-500">
             Issued: {new Date(order.createdAt).toLocaleDateString()}
           </p>
-          <p className="text-xs uppercase tracking-wide text-slate-500">Status: {order.orderStatus}</p>
+          <p className="text-xs uppercase tracking-wide text-slate-500">Status: {formatOrderStatus(order.orderStatus)}</p>
           <p className="text-xs uppercase tracking-wide text-slate-500">
             Payment: {order.paymentStatus}
           </p>
@@ -59,7 +60,7 @@ export function OrderInvoice({ order, currency = "$" }) {
         </div>
         <div>
           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Ship to
+            Deliver to
           </p>
           <p className="font-semibold">
             {shipping.firstName} {shipping.lastName}
@@ -111,7 +112,7 @@ export function OrderInvoice({ order, currency = "$" }) {
 
       <div className="mt-4 ml-auto w-full max-w-xs space-y-1 text-sm">
         <Row label="Subtotal" value={`${currency}${order.subtotal.toFixed(2)}`} />
-        <Row label="Shipping" value={`${currency}${order.shippingCost.toFixed(2)}`} />
+        <Row label="Delivery" value={`${currency}${order.shippingCost.toFixed(2)}`} />
         <Row label="Tax" value={`${currency}${order.tax.toFixed(2)}`} />
         {order.discount > 0 ? (
           <Row label="Discount" value={`- ${currency}${order.discount.toFixed(2)}`} />

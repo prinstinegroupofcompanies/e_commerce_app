@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { formatDeliveryStatus } from "@/lib/order-labels";
 
 const DELIVERY = [
   "pending",
@@ -76,7 +77,7 @@ export function SellerOrderLineFulfillment({ itemId, initialDeliveryStatus, init
         >
           {DELIVERY.map((s) => (
             <option key={s} value={s}>
-              {s}
+              {formatDeliveryStatus(s)}
             </option>
           ))}
         </select>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { formatOrderStatus } from "@/lib/order-labels";
 
 const ORDER_OPTIONS = ["pending", "accepted", "processing", "shipped", "delivered", "cancelled"];
 const PAYMENT_OPTIONS = ["pending", "paid", "failed", "refunded"];
@@ -69,7 +70,7 @@ export function AdminOrderStatusForm({ orderId, initialOrderStatus, initialPayme
           >
             {ORDER_OPTIONS.map((s) => (
               <option key={s} value={s}>
-                {s}
+                {formatOrderStatus(s)}
               </option>
             ))}
           </select>

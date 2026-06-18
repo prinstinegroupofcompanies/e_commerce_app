@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { sellerOrdersWhere, summarizeSellerLines } from "@/lib/seller-orders";
 import { SellerOrderLineFulfillment } from "@/components/seller/seller-order-line-fulfillment";
 import { SellerOrderActions } from "@/components/seller/seller-order-actions";
+import { formatOrderStatus } from "@/lib/order-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -80,8 +81,8 @@ export default async function SellerOrderDetailPage({ params }) {
           <Badge variant="outline" className="capitalize">
             Payment: {order.paymentStatus}
           </Badge>
-          <Badge variant="secondary" className="capitalize">
-            {order.orderStatus}
+          <Badge variant="secondary">
+            {formatOrderStatus(order.orderStatus)}
           </Badge>
         </div>
       </div>
@@ -202,7 +203,7 @@ export default async function SellerOrderDetailPage({ params }) {
 
           <Card>
             <CardHeader className="border-b bg-muted/40 py-4">
-              <CardTitle className="text-base">Ship to</CardTitle>
+              <CardTitle className="text-base">Deliver to</CardTitle>
             </CardHeader>
             <CardContent className="p-5 text-sm leading-relaxed text-muted-foreground">
               <p className="font-medium text-foreground">

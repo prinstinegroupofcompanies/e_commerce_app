@@ -111,8 +111,8 @@ export function CheckoutWizard() {
 
   const subtotal = getSubtotal();
   const discount = getDiscount();
-  const shipping = deliveryType === "pickup" ? 0 : subtotal - discount >= 50 ? 0 : 5.99;
-  const total = Math.max(0, subtotal - discount + shipping);
+  const deliveryCharge = deliveryType === "pickup" ? 0 : subtotal - discount >= 50 ? 0 : 5.99;
+  const total = Math.max(0, subtotal - discount + deliveryCharge);
 
   const stripePromise = useMemo(() => {
     const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
@@ -243,9 +243,6 @@ export function CheckoutWizard() {
     } else if (!a.address.trim() || !a.city.trim() || !a.country.trim()) {
       toast.error("Please complete all required address fields");
       return false;
-    } else if (!deliveryCompanyId) {
-      toast.error("Please select a delivery company");
-      return false;
     }
     if (!isCustomer) {
       if (!guestName.trim() || !guestEmail.trim()) {
@@ -272,6 +269,8 @@ export function CheckoutWizard() {
         body: JSON.stringify({
           deliveryType,
           pickupPointId: deliveryType === "pickup" ? pickupPointId : null,
+          deliveryCompanyId: deliveryType === "shipping" ? deliveryCompanyId || null : null,
+          deliverySpeed: deliveryType === "shipping" ? deliverySpeed : "standard",
           paymentMethod,
           shippingAddress: addr,
           guestEmail: isCustomer ? undefined : guestEmail,
@@ -286,7 +285,16 @@ export function CheckoutWizard() {
       });
       const json = await res.json();
       if (!json.success) {
-        toast.error(json.error || "Checkout failed");
+        const fieldErrors = json.errors || json.details;
+        const detail =
+          fieldErrors && typeof fieldErrors === "object" && !Array.isArray(fieldErrors)
+            ? Object.entries(fieldErrors)
+                .flatMap(([field, messages]) =>
+                  (Array.isArray(messages) ? messages : [messages]).map((m) => `${field}: ${m}`),
+                )
+                .join(" · ")
+            : "";
+        toast.error(detail || json.error || "Checkout failed");
         setSubmitting(false);
         return;
       }
@@ -410,7 +418,7 @@ export function CheckoutWizard() {
                       <span>
                         <span className="flex items-center gap-2 font-medium">
                           <MapPin className="h-4 w-4" />
-                          Ship to address
+                          Deliver to address
                         </span>
                         <span className="mt-0.5 block text-sm text-muted-foreground">
                           Standard delivery to your door.
@@ -618,7 +626,7 @@ export function CheckoutWizard() {
                 <CardContent className="space-y-4 p-6 text-sm">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                      {deliveryType === "pickup" ? "Pickup" : "Ship to"}
+                      {deliveryType === "pickup" ? "Pickup" : "Deliver to"}
                     </p>
                     <p className="mt-1 font-medium">
                       {addr.firstName} {addr.lastName} · {addr.phone}
@@ -709,8 +717,8 @@ export function CheckoutWizard() {
                 </div>
               ) : null}
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Shipping</span>
-                <span className="tabular-nums">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                <span className="text-muted-foreground">Delivery</span>
+                <span className="tabular-nums">{deliveryCharge === 0 ? "Free" : `$${deliveryCharge.toFixed(2)}`}</span>
               </div>
               <div className="flex justify-between border-t pt-2 text-base font-semibold">
                 <span>Total</span>

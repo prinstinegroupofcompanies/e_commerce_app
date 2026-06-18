@@ -25,7 +25,7 @@ export default async function AdminBackupPage() {
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <p>
-            This export includes products, orders, customers, sellers, settings, blog, and shipping/payment configuration.
+            This export includes products, orders, customers, sellers, settings, blog, and delivery/payment configuration.
             Sensitive password hashes are included — store securely.
           </p>
           <Button asChild>

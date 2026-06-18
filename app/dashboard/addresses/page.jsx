@@ -14,7 +14,7 @@ export default async function CustomerAddressesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Addresses</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Manage shipping addresses for faster checkout.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Manage delivery addresses for faster checkout.</p>
       </div>
       <CustomerAddressesManager />
     </div>

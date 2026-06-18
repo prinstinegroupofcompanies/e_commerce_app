@@ -40,7 +40,7 @@ export async function GET(request) {
     "customerEmail",
     "items",
     "subtotal",
-    "shippingCost",
+    "deliveryCost",
     "discount",
     "tax",
     "total",

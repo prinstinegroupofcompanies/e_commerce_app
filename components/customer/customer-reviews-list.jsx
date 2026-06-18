@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { resolveMediaUrl } from "@/lib/upload-url";
 
 function Stars({ rating }) {
   return (
@@ -56,7 +57,7 @@ export async function CustomerReviewsList() {
               <div className="h-16 w-16 shrink-0 overflow-hidden rounded bg-muted">
                 {img ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={img} alt={r.product.name} className="h-full w-full object-cover" />
+                  <img src={resolveMediaUrl(img) || "/placeholder-product.svg"} alt={r.product.name} className="h-full w-full object-cover" />
                 ) : null}
               </div>
               <div className="flex-1 space-y-1">

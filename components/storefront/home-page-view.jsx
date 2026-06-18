@@ -199,7 +199,7 @@ export function HomePageView({
               {
                 Icon: Truck,
                 title: "Fast delivery",
-                body: "Free shipping on qualifying orders — calculated at checkout.",
+                body: "Free delivery on qualifying orders — calculated at checkout.",
               },
               {
                 Icon: ShieldCheck,

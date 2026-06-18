@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Images } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getProductGalleryImages } from "@/lib/product-images";
-import { resolveMediaUrl } from "@/lib/upload-url";
+import { MediaImage } from "@/components/shared/media-image";
 
 /**
  * Tap/click cycles images; tap again on last image opens the product page.
@@ -22,7 +22,7 @@ export function ProductCardMedia({ slug, name, thumbnail, images, className }) {
   const router = useRouter();
   const gallery = useMemo(
     () => {
-      const list = getProductGalleryImages({ thumbnail, images }).map((src) => resolveMediaUrl(src));
+      const list = getProductGalleryImages({ thumbnail, images });
       return list.length ? list : ["/placeholder-product.svg"];
     },
     [thumbnail, images]
@@ -72,8 +72,7 @@ export function ProductCardMedia({ slug, name, thumbnail, images, className }) {
           : `View ${name}`
       }
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <MediaImage
         key={gallery[idx]}
         src={gallery[idx]}
         alt={name}

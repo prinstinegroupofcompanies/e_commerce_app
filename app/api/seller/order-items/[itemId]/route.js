@@ -69,7 +69,7 @@ export async function PATCH(request, context) {
     }
     await notify({
       customerId: line.order.customerId,
-      title: `Shipment update — ${line.order.code}`,
+      title: `Delivery update — ${line.order.code}`,
       message: `${updated.name}: ${parts.join(" · ") || "updated"}`,
       type: "info",
       link: `/dashboard/orders/${line.order.id}`,

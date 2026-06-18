@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Shipping zones" };
+export const metadata = { title: "Delivery zones" };
 
 export default async function AdminShippingZonesPage() {
   await auth();
@@ -19,7 +19,7 @@ export default async function AdminShippingZonesPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Shipping zones</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Delivery zones</h1>
           <p className="text-sm text-muted-foreground">Defined under profiles — manage rates from the profile view.</p>
         </div>
         <Button asChild variant="outline" size="sm">

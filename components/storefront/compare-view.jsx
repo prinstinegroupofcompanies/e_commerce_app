@@ -26,7 +26,12 @@ const ROWS = [
   { key: "category", label: "Category", format: (p) => p.category?.name || "—" },
   { key: "seller", label: "Sold by", format: (p) => p.seller?.shopName || "Marketplace" },
   { key: "condition", label: "Condition", format: (p) => p.condition || "—" },
-  { key: "shippingType", label: "Shipping", format: (p) => p.shippingType || "—" },
+  { key: "shippingType", label: "Delivery", format: (p) => {
+    if (p.shippingType === "free") return "Free delivery";
+    if (p.shippingType === "flat") return "Flat rate";
+    if (p.shippingType === "profile") return "Delivery profile";
+    return p.shippingType || "—";
+  }},
   { key: "cod", label: "Cash on delivery", format: (p) => (p.cashOnDelivery ? "Yes" : "No") },
   {
     key: "description",

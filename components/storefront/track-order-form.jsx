@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DeliveryMap } from "@/components/storefront/delivery-map";
+import { formatOrderStatus } from "@/lib/order-labels";
 
 export function TrackOrderForm({ defaultCode = "", defaultEmail = "" }) {
   const [code, setCode] = useState(defaultCode);
@@ -81,7 +82,7 @@ export function TrackOrderForm({ defaultCode = "", defaultEmail = "" }) {
           <CardHeader>
             <CardTitle className="text-base">
               Order {order.code}{" "}
-              <Badge variant="outline" className="ml-2 capitalize">{order.orderStatus}</Badge>
+              <Badge variant="outline" className="ml-2">{formatOrderStatus(order.orderStatus)}</Badge>
               <Badge variant="outline" className="ml-2 capitalize">{order.paymentStatus}</Badge>
             </CardTitle>
           </CardHeader>
@@ -171,7 +172,7 @@ export function TrackOrderForm({ defaultCode = "", defaultEmail = "" }) {
               <ol className="mt-2 space-y-3 border-l-2 border-primary/20 pl-4">
                 {order.statusHistory.map((h, idx) => (
                   <li key={idx}>
-                    <p className="font-medium capitalize">{h.label || h.status}</p>
+                    <p className="font-medium">{formatOrderStatus(h.label || h.status)}</p>
                     {h.comment ? <p className="text-xs text-muted-foreground">{h.comment}</p> : null}
                     <p className="text-[10px] uppercase tracking-wide text-muted-foreground">
                       {new Date(h.createdAt).toLocaleString()}

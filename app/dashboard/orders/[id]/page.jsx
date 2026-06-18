@@ -10,6 +10,7 @@ import { FileText } from "lucide-react";
 import { CancelOrderButton } from "@/components/customer/cancel-order-button";
 import { ConfirmDeliveryForm } from "@/components/customer/confirm-delivery-form";
 import { OrderLiveTracking } from "@/components/customer/order-live-tracking";
+import { formatOrderStatus } from "@/lib/order-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -77,8 +78,8 @@ export default async function CustomerOrderDetailPage({ params }) {
           <Badge variant="outline" className="capitalize">
             Payment: {order.paymentStatus}
           </Badge>
-          <Badge variant="secondary" className="capitalize">
-            {order.orderStatus}
+          <Badge variant="secondary">
+            {formatOrderStatus(order.orderStatus)}
           </Badge>
           <Button asChild variant="outline" size="sm">
             <Link href={`/dashboard/orders/${order.id}/invoice`}>
@@ -107,7 +108,7 @@ export default async function CustomerOrderDetailPage({ params }) {
                     <TableHead className="text-right">Qty</TableHead>
                     <TableHead className="text-right">Price</TableHead>
                     <TableHead className="text-right">Subtotal</TableHead>
-                    <TableHead>Shipment</TableHead>
+                    <TableHead>Delivery</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -218,7 +219,7 @@ export default async function CustomerOrderDetailPage({ params }) {
                 <span className="tabular-nums">${order.subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Shipping</span>
+                <span className="text-muted-foreground">Delivery</span>
                 <span className="tabular-nums">${order.shippingCost.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
@@ -248,7 +249,7 @@ export default async function CustomerOrderDetailPage({ params }) {
           <Card>
             <CardHeader className="border-b bg-muted/40 py-4">
               <CardTitle className="text-base">
-                {order.isPickup ? "Pickup details" : "Shipping address"}
+                {order.isPickup ? "Pickup details" : "Delivery address"}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-5 text-sm leading-relaxed text-muted-foreground">

@@ -503,18 +503,18 @@ export function ProductEditorForm({
 
       <Card>
         <CardHeader>
-          <CardTitle>Shipping & visibility</CardTitle>
+          <CardTitle>Delivery & visibility</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="shippingType">Shipping type</Label>
+            <Label htmlFor="shippingType">Delivery type</Label>
             <select id="shippingType" className={selectClass} {...register("shippingType")}>
               <option value="flat">Flat rate</option>
-              <option value="free">Free shipping</option>
+              <option value="free">Free delivery</option>
             </select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="shippingCost">Shipping cost</Label>
+            <Label htmlFor="shippingCost">Delivery cost</Label>
             <Input id="shippingCost" type="number" inputMode="decimal" step="0.01" min="0" {...register("shippingCost")} />
           </div>
           <label className="flex items-center gap-2 pt-2 text-sm">

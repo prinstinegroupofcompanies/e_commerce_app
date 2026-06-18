@@ -20,7 +20,7 @@ export default function StorefrontLayout({ children }) {
           <span className="hidden text-primary-foreground/70 sm:inline" aria-hidden>
             ·
           </span>
-          <span className="text-accent">Free shipping on orders over $50</span>
+          <span className="text-accent">Free delivery on orders over $50</span>
         </div>
       </div>
       <StorefrontHeader />

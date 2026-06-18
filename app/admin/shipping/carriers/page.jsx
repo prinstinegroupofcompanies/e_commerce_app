@@ -7,7 +7,7 @@ import { SimpleToggleButton } from "@/components/admin/simple-toggle-button";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Shipping carriers" };
+export const metadata = { title: "Delivery carriers" };
 
 export default async function AdminCarriersPage() {
   await auth();
@@ -17,7 +17,7 @@ export default async function AdminCarriersPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Shipping carriers</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Delivery carriers</h1>
           <p className="text-sm text-muted-foreground">Carriers shown on order detail and tracking links.</p>
         </div>
         <InlineCreateForm
