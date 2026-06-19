@@ -86,7 +86,19 @@ Vercel proxies `/api/*` and `/uploads/*` to Render so the browser stays on one o
 
 4. Deploy.
 
-5. Go back to Render **markay-hall-api** and update `NEXTAUTH_URL` + `NEXT_PUBLIC_APP_URL` to your final Vercel URL (or custom domain).
+5. **Enable auto-deploy from GitHub** (required for pushes to update the live site):
+   - Vercel → your project → **Settings → Git**
+   - Connect **`prinstinegroupofcompanies/e_commerce_app`** on branch **`main`**
+   - If the project was created via CLI without Git, use **Connect Git Repository** or re-import the repo
+   - After connecting, open **Deployments → Redeploy** on the latest commit
+
+   **Alternative (CI):** add GitHub Actions secrets (repo → Settings → Secrets → Actions):
+   - `VERCEL_TOKEN` — [vercel.com/account/tokens](https://vercel.com/account/tokens)
+   - `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` — from `.vercel/project.json` after `npx vercel link`, or Vercel project Settings → General
+
+   The workflow [`.github/workflows/vercel-production.yml`](./.github/workflows/vercel-production.yml) deploys on every push to `main` when those secrets are set.
+
+6. Go back to Render **markay-hall-api** and update `NEXTAUTH_URL` + `NEXT_PUBLIC_APP_URL` to your final Vercel URL (or custom domain).
 
 ---
 
