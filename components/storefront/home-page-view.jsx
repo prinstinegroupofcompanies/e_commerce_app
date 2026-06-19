@@ -6,6 +6,7 @@ import { AutoCarousel } from "@/components/shared/auto-carousel";
 import { Button } from "@/components/ui/button";
 import { SITE_NAME } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/upload-url";
+import { StorefrontHeroBackdrop } from "@/components/storefront/storefront-hero-backdrop";
 
 /**
  * @param {{
@@ -34,96 +35,101 @@ export function HomePageView({
 
   return (
     <div className="relative overflow-hidden">
-      {/* subtle page background */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-gradient-to-b from-primary/[0.08] via-accent/[0.04] to-transparent"
-        aria-hidden
-      />
+      {/* Hero with background banner + admin promo banners */}
+      <StorefrontHeroBackdrop tall>
+        <div className="mb-8 max-w-2xl">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FFBF00]/40 bg-[#FFBF00]/15 px-3 py-1 text-xs font-semibold text-[#FFBF00] backdrop-blur-sm">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden />
+            {SITE_NAME} marketplace
+          </p>
+          <h1 className="mt-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl lg:leading-[1.1]">
+            Everything you love, from sellers you trust
+          </h1>
+          <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-white/85 sm:text-base">
+            Curated categories, featured picks, and independent shops — one checkout, clear pricing, mobile-first
+            browsing.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Button
+              size="lg"
+              className="min-h-11 border-0 bg-[#FFBF00] px-6 font-semibold text-[#002395] shadow-lg shadow-black/20 hover:bg-[#FFBF00]/90"
+              asChild
+            >
+              <Link href="/products">Shop all products</Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="min-h-11 border-white/35 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white"
+              asChild
+            >
+              <Link href="/register">Create account</Link>
+            </Button>
+          </div>
+        </div>
 
-      {/* Hero */}
-      <section className="relative border-b border-border/60 bg-gradient-to-b from-background via-background to-muted/20">
-        <div className="mx-auto w-full max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pb-12 sm:pt-8 lg:px-8 lg:pb-14 lg:pt-10">
-          <div className="mb-6 max-w-2xl">
-            <p className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden />
-              ShopLIB marketplace
-            </p>
-            <h1 className="mt-4 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-              Everything you love, from sellers you trust
-            </h1>
-            <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Curated categories, featured picks, and independent shops — one checkout, clear pricing, mobile-first
-              browsing.
-            </p>
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <Button size="lg" className="min-h-11 bg-accent px-6 text-accent-foreground shadow-sm hover:bg-accent/90" asChild>
-                <Link href="/products">Shop all products</Link>
-              </Button>
-              <Button size="lg" variant="outline" className="min-h-11 border-primary/30 bg-background/80" asChild>
-                <Link href="/register">Create account</Link>
-              </Button>
+        {primary ? (
+          <div className="grid gap-4 lg:grid-cols-12 lg:gap-6 lg:items-stretch">
+            <Link
+              href={primary.link || "/products"}
+              className="group relative flex min-h-[200px] overflow-hidden rounded-2xl border border-white/20 bg-black/20 shadow-xl ring-1 ring-white/10 transition hover:shadow-2xl lg:col-span-7 lg:min-h-[280px]"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={resolveMediaUrl(primary.image)}
+                alt={primary.title}
+                className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#001a6e]/90 via-[#002395]/40 to-transparent" />
+              <div className="relative mt-auto flex w-full flex-col justify-end p-5 sm:p-7 lg:p-8">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#FFBF00]">Featured</p>
+                <p className="mt-1 max-w-lg text-2xl font-bold leading-tight text-white sm:text-3xl">{primary.title}</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-white/90">
+                  Shop the collection
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden />
+                </span>
+              </div>
+            </Link>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1 lg:grid-rows-2 lg:gap-6">
+              {(restBanners.length ? restBanners : []).map((b) => (
+                <Link
+                  key={b.id}
+                  href={b.link || "/products"}
+                  className="group relative flex min-h-[140px] overflow-hidden rounded-2xl border border-white/20 bg-black/20 shadow-lg ring-1 ring-white/10 transition hover:shadow-xl sm:min-h-[160px]"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={resolveMediaUrl(b.image)}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#001a6e]/85 to-transparent" />
+                  <div className="relative flex h-full flex-col justify-center p-4 sm:p-5">
+                    <p className="text-sm font-semibold text-white sm:text-base">{b.title}</p>
+                    <span className="mt-1 text-xs text-[#FFBF00]">Explore →</span>
+                  </div>
+                </Link>
+              ))}
+              {restBanners.length === 0 ? (
+                <div className="flex min-h-[140px] flex-col justify-center rounded-2xl border border-dashed border-white/30 bg-white/10 p-5 backdrop-blur-sm sm:min-h-[160px] lg:flex-1">
+                  <p className="text-sm font-medium text-white">Deals &amp; drops</p>
+                  <p className="mt-1 text-xs leading-relaxed text-white/75">
+                    Promotional banners from your admin panel appear here beside the main hero.
+                  </p>
+                  <Button
+                    className="mt-4 w-fit border-0 bg-[#FFBF00] text-[#002395] hover:bg-[#FFBF00]/90"
+                    size="sm"
+                    asChild
+                  >
+                    <Link href="/products">Browse catalog</Link>
+                  </Button>
+                </div>
+              ) : null}
             </div>
           </div>
-
-          {primary ? (
-            <div className="grid gap-4 lg:grid-cols-12 lg:gap-6 lg:items-stretch">
-              <Link
-                href={primary.link || "/products"}
-                className="group relative flex min-h-[200px] overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm ring-1 ring-black/5 transition hover:shadow-md lg:col-span-7 lg:min-h-[280px]"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={resolveMediaUrl(primary.image)}
-                  alt={primary.title}
-                  className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="relative mt-auto flex w-full flex-col justify-end p-5 sm:p-7 lg:p-8">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-white/80">Featured</p>
-                  <p className="mt-1 max-w-lg text-2xl font-bold leading-tight text-white sm:text-3xl">{primary.title}</p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-white">
-                    Shop the collection
-                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden />
-                  </span>
-                </div>
-              </Link>
-
-              <div className="grid gap-4 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1 lg:grid-rows-2 lg:gap-6">
-                {(restBanners.length ? restBanners : []).map((b) => (
-                  <Link
-                    key={b.id}
-                    href={b.link || "/products"}
-                    className="group relative flex min-h-[140px] overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm ring-1 ring-black/5 transition hover:shadow-md sm:min-h-[160px]"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={resolveMediaUrl(b.image)}
-                      alt=""
-                      className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/65 to-transparent" />
-                    <div className="relative flex h-full flex-col justify-center p-4 sm:p-5">
-                      <p className="text-sm font-semibold text-white sm:text-base">{b.title}</p>
-                      <span className="mt-1 text-xs text-white/85">Explore →</span>
-                    </div>
-                  </Link>
-                ))}
-                {restBanners.length === 0 ? (
-                  <div className="flex min-h-[140px] flex-col justify-center rounded-2xl border border-dashed border-primary/25 bg-muted/30 p-5 sm:min-h-[160px] lg:flex-1">
-                    <p className="text-sm font-medium text-foreground">Deals &amp; drops</p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      Promotional banners from your admin panel appear here beside the main hero.
-                    </p>
-                    <Button className="mt-4 w-fit" variant="secondary" size="sm" asChild>
-                      <Link href="/products">Browse catalog</Link>
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </section>
+        ) : null}
+      </StorefrontHeroBackdrop>
 
       {sponsoredAds.length > 0 ? (
         <section className="border-b border-border/60 bg-muted/20 py-10">

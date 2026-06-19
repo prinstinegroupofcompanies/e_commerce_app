@@ -11,6 +11,7 @@ import { ProductFiltersSidebar } from "@/components/storefront/product-filters-s
 import { ProductPagination } from "@/components/storefront/product-pagination";
 import { ProductListControls } from "@/components/storefront/product-list-controls";
 import { StorefrontSearchBar } from "@/components/storefront/storefront-search-bar";
+import { StorefrontHeroBackdrop } from "@/components/storefront/storefront-hero-backdrop";
 import { cn } from "@/lib/utils";
 import { SITE_NAME } from "@/lib/brand";
 
@@ -69,15 +70,22 @@ export default async function ProductsPage({ searchParams }) {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight">All products</h1>
-      <p className="mt-2 text-muted-foreground">
-        {total} items from verified sellers · {SITE_NAME}
-      </p>
+    <div>
+      <StorefrontHeroBackdrop>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#FFBF00]">Catalog</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">All products</h1>
+        <p className="mt-2 max-w-xl text-sm text-white/80 sm:text-base">
+          {total} items from verified sellers on {SITE_NAME} — filter, compare, and checkout in one place.
+        </p>
+        <div className="mt-6 max-w-xl">
+          <StorefrontSearchBar
+            placeholder="Search products and stores…"
+            className="[&_input]:border-white/25 [&_input]:bg-white/95 [&_input]:text-foreground"
+          />
+        </div>
+      </StorefrontHeroBackdrop>
 
-      <div className="mt-6 max-w-xl">
-        <StorefrontSearchBar placeholder="Search products and stores from this catalog…" />
-      </div>
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
 
       <div className="mt-6">
         <Suspense fallback={<div className="h-9" aria-hidden />}>
@@ -105,6 +113,7 @@ export default async function ProductsPage({ searchParams }) {
           )}
           <ProductPagination page={p.page} perPage={p.perPage} total={total} basePath="/products" query={paginationQuery} />
         </div>
+      </div>
       </div>
     </div>
   );

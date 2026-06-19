@@ -8,6 +8,7 @@ import { ProductReviewForm } from "@/components/storefront/product-review-form";
 import { RecentlyViewedTracker } from "@/components/storefront/recently-viewed-tracker";
 import { RecentlyViewedRail } from "@/components/storefront/recently-viewed-rail";
 import { ProductCard } from "@/components/storefront/product-card";
+import { StorefrontHeroBackdrop } from "@/components/storefront/storefront-hero-backdrop";
 import { catalogProductVisibilityWhere } from "@/lib/storefront-catalog";
 import { totalVariantStock } from "@/lib/variant-options";
 
@@ -139,11 +140,38 @@ export default async function ProductDetailPage({ params }) {
 
   return (
     <div className="relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-primary/[0.07] via-accent/[0.03] to-transparent"
-        aria-hidden
-      />
-      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+      <StorefrontHeroBackdrop contentClassName="py-8 sm:py-10">
+        <nav className="flex flex-wrap items-center gap-1 text-sm text-white/75" aria-label="Breadcrumb">
+          <Link href="/" className="rounded-md px-1 transition hover:text-[#FFBF00]">
+            Home
+          </Link>
+          <span className="text-white/40">/</span>
+          <Link href="/products" className="rounded-md px-1 transition hover:text-[#FFBF00]">
+            Products
+          </Link>
+          {product.category?.slug ? (
+            <>
+              <span className="text-white/40">/</span>
+              <Link href={`/category/${product.category.slug}`} className="rounded-md px-1 transition hover:text-[#FFBF00]">
+                {product.category.name}
+              </Link>
+            </>
+          ) : null}
+        </nav>
+        <h1 className="mt-4 line-clamp-2 max-w-3xl text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          {product.name}
+        </h1>
+        {product.brand?.name ? (
+          <p className="mt-2 text-sm text-white/80">
+            Brand: {product.brand.name}
+            {product.seller?.shopName ? ` · Sold by ${product.seller.shopName}` : ""}
+          </p>
+        ) : product.seller?.shopName ? (
+          <p className="mt-2 text-sm text-white/80">Sold by {product.seller.shopName}</p>
+        ) : null}
+      </StorefrontHeroBackdrop>
+
+      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
       <RecentlyViewedTracker
         product={{
           id: product.id,
@@ -154,26 +182,6 @@ export default async function ProductDetailPage({ params }) {
         }}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
-      <nav className="mb-8 flex flex-wrap items-center gap-1 text-sm text-muted-foreground" aria-label="Breadcrumb">
-        <Link href="/" className="rounded-md px-1 transition hover:text-primary">
-          Home
-        </Link>
-        <span className="text-border">/</span>
-        <Link href="/products" className="rounded-md px-1 transition hover:text-primary">
-          Products
-        </Link>
-        {product.category?.slug ? (
-          <>
-            <span className="text-border">/</span>
-            <Link href={`/category/${product.category.slug}`} className="rounded-md px-1 transition hover:text-primary">
-              {product.category.name}
-            </Link>
-          </>
-        ) : null}
-        <span className="text-border">/</span>
-        <span className="line-clamp-1 font-medium text-foreground">{product.name}</span>
-      </nav>
 
       <ProductPurchaseBlock
         product={product}

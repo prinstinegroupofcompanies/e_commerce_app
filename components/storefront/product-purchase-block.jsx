@@ -13,6 +13,7 @@ import { useCartStore } from "@/store/cart-store";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { trackInteraction } from "@/lib/analytics/track-client";
+import { ShieldCheck, Truck, RotateCcw } from "lucide-react";
 import {
   parseVariantOptions,
   groupVariantAttributes,
@@ -173,9 +174,9 @@ export function ProductPurchaseBlock({
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+    <div className="grid gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-12">
       <div className="lg:sticky lg:top-24 lg:self-start">
-        <div className="overflow-hidden rounded-2xl border border-border/80 bg-card p-3 shadow-lg ring-1 ring-black/5">
+        <div className="overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-b from-card to-muted/30 p-3 shadow-xl ring-1 ring-black/5">
           <ProductImageGallery
             images={displayImages}
             productName={product.name}
@@ -190,18 +191,19 @@ export function ProductPurchaseBlock({
         ) : null}
       </div>
 
-      <div className="rounded-2xl border border-border/80 bg-card/50 p-6 shadow-sm ring-1 ring-black/5 backdrop-blur-sm sm:p-8">
+      <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-lg ring-1 ring-primary/5 sm:p-8">
         <p className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
           {seller?.shopName || "Marketplace seller"}
         </p>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{product.name}</h1>
+        <p className="sr-only">{product.name}</p>
+
         {brand?.name ? (
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-3 text-sm text-muted-foreground">
             Brand:{" "}
             {brand.slug ? (
               <Link
                 href={`/products?brand=${encodeURIComponent(brand.slug)}`}
-                className="text-primary hover:underline"
+                className="font-medium text-primary hover:underline"
               >
                 {brand.name}
               </Link>
@@ -211,43 +213,62 @@ export function ProductPurchaseBlock({
           </p>
         ) : null}
 
-        <div className="mt-5 flex flex-wrap items-baseline gap-3 rounded-xl bg-muted/40 px-4 py-3">
-          <span className="text-4xl font-bold text-primary">${price.toFixed(2)}</span>
+        <div className="mt-5 flex flex-wrap items-baseline gap-3 rounded-2xl border border-primary/10 bg-gradient-to-r from-primary/5 to-accent/10 px-5 py-4">
+          <span className="text-4xl font-bold text-primary sm:text-5xl">${price.toFixed(2)}</span>
           {comparePrice && comparePrice > price ? (
             <>
               <span className="text-lg text-muted-foreground line-through">${comparePrice.toFixed(2)}</span>
-              <span className="rounded-full bg-accent/20 px-2 py-0.5 text-xs font-semibold text-accent-foreground">
+              <span className="rounded-full bg-[#FFBF00]/25 px-3 py-1 text-xs font-bold text-[#002395]">
                 Save ${(comparePrice - price).toFixed(2)}
               </span>
             </>
           ) : null}
         </div>
 
-        <p className="mt-4 text-sm text-muted-foreground">
+        <p className="mt-4 text-sm">
           {!outOfStock ? (
-            <span className="text-emerald-600">
+            <span className="inline-flex items-center gap-2 font-medium text-emerald-600">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
               In stock
               {hasVariants && selected
-                ? ` · ${selected.stock} available for selected option`
+                ? ` · ${selected.stock} for selected option`
                 : ` · ${totalStock} available`}
               {!hasVariants &&
               product.lowStockThreshold > 0 &&
               product.stockQuantity <= product.lowStockThreshold ? (
-                <span className="ml-2 text-amber-600">· Low stock</span>
+                <span className="text-amber-600">· Low stock</span>
               ) : null}
             </span>
           ) : (
-            <span className="text-destructive">Out of stock</span>
+            <span className="font-medium text-destructive">Out of stock</span>
           )}
         </p>
 
         {seller?.shopSlug ? (
-          <p className="mt-2">
-            <Link href={`/shop/${seller.shopSlug}`} className="text-sm font-medium text-primary hover:underline">
+          <p className="mt-3">
+            <Link
+              href={`/shop/${seller.shopSlug}`}
+              className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+            >
               Visit seller store →
             </Link>
           </p>
         ) : null}
+
+        <ul className="mt-6 grid gap-3 rounded-xl border border-border/60 bg-muted/25 p-4 text-sm sm:grid-cols-3">
+          <li className="flex items-center gap-2 text-muted-foreground">
+            <Truck className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            Fast delivery
+          </li>
+          <li className="flex items-center gap-2 text-muted-foreground">
+            <ShieldCheck className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            Secure checkout
+          </li>
+          <li className="flex items-center gap-2 text-muted-foreground">
+            <RotateCcw className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+            Easy returns
+          </li>
+        </ul>
 
         <div className="mt-8 space-y-5">
           {hasVariants && attributeKeys.length > 0 ? (
@@ -304,10 +325,16 @@ export function ProductPurchaseBlock({
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button size="lg" disabled={outOfStock} type="button" onClick={addToCart}>
+            <Button
+              size="lg"
+              disabled={outOfStock}
+              type="button"
+              onClick={addToCart}
+              className="min-h-12 flex-1 bg-[#FFBF00] font-semibold text-[#002395] shadow-md hover:bg-[#FFBF00]/90 sm:flex-none sm:px-8"
+            >
               Add to cart · ${price.toFixed(2)}
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" className="min-h-12 border-primary/30" asChild>
               <a href="/checkout">Buy now</a>
             </Button>
           </div>
