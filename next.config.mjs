@@ -2,10 +2,11 @@ import withPWA from "next-pwa";
 
 const withPWAConfigured = withPWA({
   dest: "public",
-  register: true,
+  register: false,
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
   buildExcludes: [/app-build-manifest\.json$/],
+  runtimeCaching: [],
 });
 
 function hostnameFromEnv(name) {

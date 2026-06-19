@@ -13,12 +13,18 @@ import { cn } from "@/lib/utils";
  */
 export function StorefrontHeroBackdrop({ children, className, contentClassName, tall = false }) {
   return (
-    <section className={cn("relative overflow-hidden border-b border-white/10", className)}>
+    <section
+      className={cn(
+        "relative overflow-hidden border-b border-white/10",
+        tall ? "min-h-[22rem] sm:min-h-[26rem]" : "min-h-[12rem] sm:min-h-[14rem]",
+        className
+      )}
+    >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={BACKGROUND_BANNER_SRC} alt="" className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#002395]/92 via-[#001a6e]/88 to-[#000d3d]/95" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,191,0,0.18),transparent_55%)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#002395]/75 via-[#001a6e]/70 to-[#000d3d]/82" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,191,0,0.22),transparent_55%)]" />
       </div>
       <div
         className={cn(
